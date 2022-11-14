@@ -1,0 +1,80 @@
+# Описываем L1 Context в нотации C4 Model
+c4model:
+  # ******************************************************
+  #                      Клиенты
+  # ******************************************************
+  customerA:
+    title: Customer A
+    entity: Person
+    links:
+      - id: SystemAA
+        direction: ->
+  customerB:
+    title: Customer B
+    entity: Person
+  customerC:
+    title: Customer C
+    entity: Person_Ext
+  customerD:
+    title: Customer D
+    entity: Person
+
+  # ******************************************************
+  #                      Системы
+  # ******************************************************
+  SystemAA:
+    title: Internet Banking System
+    description: Allows customers to view information about their bank accounts, and make payments.
+    entity: System
+    links:
+      - id: SystemE
+        direction: ->
+        title: Uses
+      - id: SystemC
+        direction: <->
+        title: Sends e-mails
+        description: SMTP
+
+  # BankBoundary
+  SystemE:
+    title: Mainframe Banking System
+    description: Stores all of the core banking information about customers, accounts, transactions, etc.
+    entity: SystemDb_Ext
+    boundary: BankBoundary
+  SystemC:
+    title: E-mail system
+    description: The internal Microsoft Exchange e-mail system.
+    entity: System_Ext
+    boundary: BankBoundary
+    links:
+      - id: customerA
+        direction: <->
+        title: Sends e-mails to
+  SystemD:
+    title: Banking System D Database
+    description: A system of the bank, with personal bank accounts.
+    entity: SystemDb
+    boundary: BankBoundary
+
+  # BankBoundary.BankBoundary2
+  SystemA:
+    title: Banking System A
+    entity: System
+    boundary: BankBoundary.BankBoundary2
+  SystemB:
+    title: Banking System B
+    entity: System
+    description: A system of the bank, with personal bank accounts.
+    boundary: BankBoundary.BankBoundary2
+
+  # BankBoundary.BankBoundary3
+  SystemF:
+    title: Banking System F Queue
+    description: A system of the bank, with personal bank accounts.
+    entity: SystemQueue
+    boundary: BankBoundary.BankBoundary3
+  SystemG:
+    title: Banking System G Queue
+    description: A system of the bank, with personal bank accounts.
+    entity: System_Ext
+    boundary: BankBoundary.BankBoundary3

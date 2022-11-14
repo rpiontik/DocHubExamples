@@ -1,0 +1,72 @@
+# Описываем L3 Components в нотации C4 Model
+# Раскрываяем SystemAA.backend_api: API Application
+c4model:
+  SystemAA.backend_api.sign:
+    title: Sign In Controller
+    description: Allows users to sign in to the internet banking system
+    entity: Component
+    tech-stack:
+      - MVC Rest Controller
+    links:
+      - id: SystemAA.backend_api.security
+        title: Uses
+        direction: --
+      - id: SystemAA.spa
+        title: Uses
+        direction: <-
+        tech-stack:
+          - JSON
+          - HTTPS
+      - id: SystemAA.mobile_app
+        title: Uses
+        direction: --
+        tech-stack:
+          - JSON
+          - HTTPS
+  SystemAA.backend_api.accounts:
+    title: Accounts Summary Controller
+    description: Provides customers with a summary of their bank accounts
+    entity: Component
+    tech-stack:
+      - MVC Rest Controller
+    links:
+      - id: SystemAA.backend_api.mbsfacade
+        title: Uses
+        direction: --
+      - id: SystemAA.spa
+        title: Uses
+        direction: --
+        tech-stack:
+          - JSON
+          - HTTPS
+      - id: SystemAA.mobile_app
+        title: Uses
+        direction: --
+        tech-stack:
+          - JSON
+          - HTTPS
+  SystemAA.backend_api.security:
+    title: Security Component
+    description: Provides functionality related to singing in, changing passwords, etc.
+    entity: Component
+    tech-stack:
+      - Spring Bean
+    links:
+      - id: SystemAA.database
+        direction: --
+        title: Read & write to
+        tech-stack:
+          - JDBC
+  SystemAA.backend_api.mbsfacade:
+    title: Mainframe Banking System Facade
+    description: A facade onto the mainframe banking system.
+    entity: Component
+    tech-stack:
+      - Spring Bean
+    links:
+      - id: SystemE
+        title: Uses
+        direction: --
+        tech-stack:
+          - XML
+          - HTTPS

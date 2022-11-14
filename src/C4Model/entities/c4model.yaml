@@ -1,0 +1,273 @@
+# Создаем пользовательскую сущность - С4 Context
+# Документация - https://dochub.info/docs/dochub.entities
+entities:
+  # Идентификатор сущности
+  c4model:
+    # Смысловое описание сущности
+    title: C4 Model
+    # Схема данных объектов сущности
+    schema:
+      # Определяем переиспользуемые схемы
+      $defs:
+        # Базовые свойства компонента диаграммы
+        c4model-node:
+          type: object
+          properties:
+            title:
+              title: Наименование
+              type: string
+            description:
+              title: Описание
+              type: string
+            boundary:
+              title: Границы
+              type: string
+            links:
+              $ref: "#/$defs/c4model-links"
+          required:
+            - entity
+            - title
+        # Техстек
+        c4model-tech-stack:
+          title: Технический стек
+          type: array
+          items:
+            type: string
+        # Связь компонентов диаграммы
+        c4model-links:
+          title: Связи
+          type: array
+          items:
+            title: Идентификатор компонента
+            type: object
+            properties:
+              direction:
+                enum:
+                  - "->"
+                  - "<->"
+                  - "<-"
+                  - "--"
+              id:
+                type: string
+                pattern: ^[a-zA-Z\\_0-9]*(\.[a-zA-Z\_0-9]{1,}){0,2}$
+              title:
+                title: Название
+                type: string
+              tech-stack:
+                $ref: "#/$defs/c4model-tech-stack"
+              description:
+                title: Описание
+                type: string
+            required:
+              - id
+              - direction
+      # Описываем схему данных объектов сущности
+      type: object
+      # Идентификаторы элементов будут структурные,
+      # их структура будет определять уровень по C4 Model
+      # xxx - L1
+      # xxx.xxx - L2
+      # xxx.xxx.xxx - L3
+      # xxx.xxx.xxx.xxx - L4 (не реализован)
+      patternProperties:
+        # xxx - L1
+        ^[a-zA-Z\\_0-9]*$:
+          $ref: "#/$defs/c4model-node"
+          properties:
+            # Определяем доступные сущности для диаграмм L1
+            entity:
+              title: Сущность L1 в нотации C4 Model
+              type: string
+              enum:
+                - Person
+                - Person_Ext
+                - System
+                - SystemDb
+                - SystemQueue
+                - System_Ext
+                - SystemDb_Ext
+                - SystemQueue_Ext
+        # xxx.xxx - L2
+        ^[a-zA-Z\\_0-9]*(\.[a-zA-Z\_0-9]{1,})$:
+          $ref: "#/$defs/c4model-node"
+          properties:
+            entity:
+              title: Сущность L2 в нотации C4 Model
+              type: string
+              enum:
+                - Container
+                - ContainerDb
+                - ContainerQueue
+                - Container_Ext
+                - ContainerDb_Ext
+                - ContainerQueue_Ext
+            tech-stack:
+              $ref: "#/$defs/c4model-tech-stack"
+        # xxx.xxx.xxx - L3
+        ^[a-zA-Z\\_0-9]*(\.[a-zA-Z\_0-9]{1,}){2,2}$:
+          $ref: "#/$defs/c4model-node"
+          properties:
+            entity:
+              title: Сущность L3 в нотации C4 Model
+              type: string
+              enum:
+                - Component
+                - ComponentDb
+                - ComponentQueue
+                - Component_Ext
+                - ComponentDb_Ext
+                - ComponentQueue_Ext
+            tech-stack:
+              $ref: "#/$defs/c4model-tech-stack"
+        # xxx.xxx.xxx.xxx - L4 Реализуйте сами ;)
+      # Исключаем иные идентификаторы
+      additionalProperties: false
+    # Создаем пользовательское меню
+    menu: >
+      (
+        [{
+          /* Размещение в пользовательском меню */
+          "location": "C4 Model",
+          /* URI представления context см. ниже.*/
+          "link": "entities/c4model/context"
+        }]
+      )
+    # Создаем представления
+    presentations:
+      context:
+        # Тип документа представления
+        type: mermaid
+        # Шаблон документа
+        template: templates/context.mmd
+        # На языке JSONata генерируем данные для шаблона
+        source: >
+          (
+            /* В переменной $parent содержатся переданные параметры из URI */
+            $parent_id := $params.parent;
+            /* Определяем уровень диаграммы */
+            $levels := $split($parent_id, ".");
+            $level := $count($levels);
+            /* Сохраняем корень данных */
+            $c4model := c4model;
+            /* Получаем компонент, который ходим раскрыть. Для L1 = undefined */
+            $parent := $lookup($c4model, $parent_id);
+            /* Генерируем шаблон для выбора компонентов диаграммы */
+            $pattern := $eval("/^" & ($parent_id != "" ? $parent_id & "." : "") & "[a-zA-Z0-9\\_]*$/");
+            
+            /* Обходим все компоненты сущности C4Model */
+            $nodes := $c4model.$spread().(
+              $id := $keys()[0];
+              /* Обрабатываем компонент, если идентификатор компонента соответствует искомому */
+              $match($id, $pattern) ? $merge([$.*, {
+                /* Сохраняем идентификатор компонента в массиве компонентов диаграммы */
+                "$id": $id
+              }])
+            );
+          
+            /* Находим связь выбранных копонентов с внешними */
+            $extraNodes := $distinct([$nodes.links.(
+              $not($exists($match(id, $pattern))) ? $merge([
+                $lookup($c4model, id), 
+                {
+                  "$id": id,
+                  "links": [],
+                  "boundary": "*"
+                }
+              ])
+            )]);
+          
+            /* Генерируем код Mermaid компонентов */
+            $node2code := function($nodes, $bid) {(
+              $join([$nodes[$bid ? boundary = $bid : $not($exists(boundary))].(
+                /* Формируем заголовок компонента */
+                $title := $level < 2 
+                    /* Если уровень выше L2, даем возможность "провалиться" глубже */
+                    ? "![" & title & "](/entities/c4model/context?parent=" & $."$id" & ")"
+                    /* иначе нет */
+                    : title;
+                entity & "(" & $."$id" & ", \"" & $title & "\", \"" & description & "\")"
+              )], "\n") & "\n"
+            )};
+          
+            /* Генерируем код Mermaid границ и их наполнения */ 
+            $components := function($parent) {(
+              $pattern := $eval("/^" & $parent & "[a-zA-Z0-9\\_]*$/");
+              $boundaries := $distinct($nodes.boundary)^(boundary);
+              $join($boundaries[$match($, $pattern)].(
+                "Boundary(" & $ & ", \"" & $ & "\") {\n"
+                & $node2code($nodes, $)
+                & $join($components($ & "."), "\n")
+                & "\n}"
+              ), "\n") & "\n"
+            )};
+          
+            /* Парсим связи компонентов */
+            $relations := function() {(
+              $join([$nodes.(
+                  $from := $."$id";
+                  links.{
+                    "from": $from,
+                    "to": id,
+                    "direction": direction,
+                    "title": title,
+                    "description": description
+                  }
+                )].(
+                  (direction = "<->" ? "BiRel" : "Rel")
+                  & "("
+                  & from
+                  & ", " & to
+                  & ", \"" & title & "\""
+                  & ", \"" & description & "\""
+                  & ")"
+                )
+              , "\n") & "\n"          
+            )};
+          
+            /* Генерируем код диаграммы Mermaid */
+            $code := function () {(
+              /* Сначала выводим вгешние компонент обнаруженные в связях */
+              $node2code($extraNodes, "*")
+              /* Если уровень глубже L1, создаем контейнер */
+              & ($level > 0 ? "Container_Boundary(" & $parent_id & ", \"\") {\n" : "")
+              /* Выводим обнаруженные без областей */
+              & $node2code($nodes) 
+              /* Выводим обнаруженные компоненты разложенные в области */
+              & $components("")
+              /* Если нужно, завершаем контейнер */
+              & ($level > 0 ? "}\n" : "")
+              /* Генерируем связи компонентов на диаграмме */
+              & $relations()
+            )};
+          
+            /* Возвращаем результирующие данные */
+            {
+              /* Определяем уровень представления */
+              "notation": $lookup({
+                "0": "C4Context",
+                "1": "C4Container",
+                "2": "C4Component"
+              }, $string($level)),
+
+              /* Генерируем код */
+              "code": 
+                  /* Если количество компонентов на диаграмме есть */
+                  $count($nodes) > 0 
+                  /* выводом */
+                  ? $code()
+                  /* иначе сообщаем, что внутри пусто */
+                  : "\nBoundary(bempty, \"\") {\nSystem(sempty, \"Здесь пусто\")\n}"
+                  ,
+          
+              /* Генерируем заголовок диаграммы */
+              "title":
+                /* Если есть компонент верхнего уровня */
+                $parent
+                /* Возвращаем его название */
+                ? $parent.title 
+                /* Иначе идентификатор, а если он пустой, то считаем диаграмму L1 */
+                : ($parent_id ? $parent_id : "Context")
+            }
+          )
+        
+

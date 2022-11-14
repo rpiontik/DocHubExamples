@@ -1,0 +1,93 @@
+# Описываем L2 Container в нотации C4 Model
+# Раскрываяем SystemAA: Internet Banking System
+c4model:
+  # ******************************************************
+  #                      Системы
+  # ******************************************************
+  SystemAA.spa:
+    entity: Container
+    title: Single-Page App
+    description: Provides all the Internet banking functionality to customers via their web browser.
+    tech-stack:
+      - JavaScript
+      - Angular
+    links:
+      - id: customerA
+        title: Uses
+        direction: --
+        tech-stack:
+          - HTTPS
+      - id: SystemAA.backend_api
+        title: Uses
+        direction: --
+        tech-stack:
+          - async
+          - HTTPS
+          - JSON
+  SystemAA.mobile_app:
+    entity: Container_Ext
+    title: Mobile App
+    description: Provides a limited subset of the Internet banking functionality to customers via their mobile device.
+    tech-stack:
+      - C#
+      - Xamarin
+    links:
+      - id: customerA
+        title: Uses
+        direction: --
+      - id: SystemAA.backend_api
+        title: Uses
+        direction: --
+        tech-stack:
+          - async
+          - JSON
+          - HTTPS
+  SystemAA.web_app:
+    entity: Container
+    title: Web Application
+    description: Delivers the static content and the Internet banking SPA.
+    tech-stack:
+      - Java
+      - Spring MVC
+    links:
+      - id: customerA
+        title: Uses
+        direction: --
+        tech-stack:
+          - HTTPS
+      - id: SystemAA.spa
+        direction: --
+        title: Delivers
+  SystemAA.database:
+    entity: ContainerDb
+    title: Database
+    description: Stores user registration information, hashed auth credentials, access logs, etc.
+    tech-stack:
+      - SQL Database
+    links:
+      - id: SystemAA.backend_api
+        title: Reads from and writes to
+        direction: <-
+        tech-stack:
+          - sync
+          - JDBC
+  SystemAA.backend_api:
+    entity: ContainerDb_Ext
+    title: API Application
+    description: Provides Internet banking functionality via API
+    tech-stack:
+      - Java
+      - Docker Container
+    links:
+      - id: SystemC
+        title: Send E-mail
+        direction: ->
+      - id: SystemE
+        title: Uses
+        direction: --
+        tech-stack:
+          - sync
+          - async
+          - XML
+          - HTTPS
+

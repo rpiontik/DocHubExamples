@@ -1,0 +1,3 @@
+imports:
+  # Пример создания метамодели для описания в нотации C4 Model
+  - src/C4Model/dochub.yaml
