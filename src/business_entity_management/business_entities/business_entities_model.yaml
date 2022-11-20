@@ -105,7 +105,7 @@ entities: # Сущности расширенной метамодели
       # Наследуемся от таблицы business_entities.in_systems и делаем фильтр по конкретной системе
       business_entities_table_in_systems.filtered:     # Дочерняя таблица
         type: table
-        headers:
+        headers: 
           - value: system_title
             text: Система
             sortable: true
