@@ -1,0 +1,87 @@
+components:
+  samolet.bu_name.system_name:
+    # Общая информация
+    title: Имя системы    # Название компонента
+    entity: system   # Сущность компонента из PlantUML (https://plantuml.com/ru/deployment-diagram)    
+    description: Полное описание системы/сервиса
+    short_description: Краткое описание системы/сервиса
+    owner: Фамилия имя владельца системы/сервиса
+    applink: Ссылка на систему/сервис. Это может быть либо ссылка на S.POT, либо ссылка на внутренний или внешний ресурс    
+    critical_level: low #low/middle/high/critical    
+    customer_type:
+      - b2b
+      # - b2c
+      # - internal
+    system_category:
+      - administrative
+      - canal
+      - accounting
+      - supporting   
+   
+    technologies: # Используемые технологии
+      - описание технологий находится здесь 4_tech_arch/technologies.yaml
+    aspects:                # Аспекты, которе реализует компонент
+      - описание аспектов находится здесь 3_application_arch/functions/functions.yaml
+    links:     
+      - id: samolet.bu_name.system_name
+        direction: <--
+
+    # Риски/проблемы
+    risk_functional_fit: # определяет насколько приложение/сервис удовлетворяет функциональным требованиям пользователей
+      value: 1 #1-10
+      date_value: 09.10.2022 # дд.мм.гггг или дд-мм-гггг
+      comments: Тестовый комментарий
+    
+    risk_arch_maturity: # определяет зрелость архитектуры приложений/сервисов
+      value: 3
+      date_value: 14.10.2022
+      comments: Тестовый комментарий
+    
+    app_rating: # определяет рейтинг приложения из S.POT
+      value: A # A/B/C/D
+      spot_link: https://spot.samoletgroup.ru/product/6757a357-e3e4-432c-965c-86cc2a22aa48
+
+    risk_code_control: # определяет на сколько хорошо мы управляем кодовой базой внутри Самолета
+      value: 10
+      date_value: 12.10.2022
+      comments: Тестовый комментарий
+
+    risk_sustainability: # определяет устойчивость/надежность приложения 
+      value: 0
+      date_value: 14-10-2022
+      comments: Тестовый комментарий
+
+    risk_security: # определяет уровень  кибербезопасности приложения
+      value: 9
+      date_value: 2022.12.10
+      comments: Тестовый комментарий
+
+    risk_capacity: # определяет утилизацию серверных, сетевых мощностей для приложений
+      value: 3
+      date_value: 14-10-2022
+      comments: Тестовый комментарий
+
+    risk_vendor: # определяет каковы риски вендора приложения (vendor lock, санкционность, мощность вендора)
+      value: 1
+      date_value: 14-10-2022
+      comments: Тестовый комментарий
+
+    risk_financial: # определяет на сколько обоснована стоимость владения системой/сервисом
+      value: 6
+      date_value: 14-10-2022
+      comments: Тестовый комментарий
+
+    risk_team_skills: # определяет зрелость и квалификацию команды, сопровождающей приложение/сервис
+      value: 6
+      date_value: 14-10-2022
+      comments: Тестовый комментарий
+
+    risk_team_capacity: # определяет хватает ли в команде ресурсов для развития/сопровождения приложения
+      value: 8
+      date_value: 14-10-2022
+      comments: Тестовый комментарий
+
+    risk_process: # определяет зрелость процессов разработки, внедрения, техподдержки приложения/сервиса
+      value: 5
+      date_value: 14-10-2022
+      comments: Тестовый комментарий
