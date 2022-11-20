@@ -1,0 +1,17 @@
+imports:  
+  - systems_table.yaml
+  - systems/_root.yaml
+  - business_entities/_root.yaml 
+  - datasets/_root.yaml
+  - artefacts/_root.yaml
+  - aspects/_root.yaml
+
+components:
+  swamp:
+    title: Экосистема Болото
+  swamp.frog:
+    title: Бизнес-юнит лягушки
+  swamp.hippo:
+    title: Бизнес-юнит бегемота
+  swamp.crocodile:
+    title: Бизнес-юнит крокодила

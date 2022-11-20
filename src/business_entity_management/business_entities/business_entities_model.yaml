@@ -1,0 +1,131 @@
+entities: # Сущности расширенной метамодели
+  # Бизнес-сущности
+  business_entities:               # Секция, где будет описываться объекты сущности "взаимодействие". Обязательно.enti
+    title: Бизнес-сущности   # Название сущности. Обязательно.
+    description: >          # Описание сущности текст или ссылка на документ. Необязательно.
+      Ключевые бизнес-сущности ГК Болото
+    menu: >                 # Генератор раcположения в меню. Запрос или явное описание объета. Необязательно.
+      (
+        $business_entities := $.business_entities;
+        $makeLocation := function($id) {(
+            $arrleft := function($arr ,$count) {
+                $map($arr, function($v, $i) {
+                $i <= $count ? $v
+                })
+            };
+            $domains := $split($id, ".");
+            "Документы/Моё болото/Бизнес-сущности/" & $join($map($domains, function($domain, $index) {(
+                $lookup(business_entities, $join($arrleft($domains, $index), ".")).title
+            )}), "/");
+        )};
+        $append(
+        [{
+            "icon": *.icon,                                                 /* Получаем иконку */
+            "link": "entities/business_entities/business_entities_list",
+            "location": "Документы/Моё болото/1. Бизнес-сущности"
+        }],
+        [{
+            "icon": *.icon,                                                 /* Получаем иконку */
+            "link": "entities/business_entities/business_entities_in_systems",
+            "location": "Документы/Моё болото/2. Список бизнес-сущностей в системах"
+        }]
+        )
+      )
+    presentations:
+      business_entities_table_list:
+        type: table
+        headers:
+          - value: title
+            text: Бизнес-сущность
+            sortable: true
+            align: left
+            link: link_to_entity
+
+          - value: id
+            text: ID в DocHub
+            sortable: true
+            align: left
+            width: 10%         
+
+          - value: description
+            text: Описание бизнес-сущности
+            sortable: false
+            align: left
+        source: swamp.dataset.business_entities_list
+
+      # Выводим список бизнес-сущностей полученных в запросе выше business_entities_list
+      business_entities_list:
+        type: markdown
+        template: business_entities_list.md
+
+      # Выводим карточку выбранной бизнес-сущности
+      business_entity_card:
+        type: markdown
+        template: business_entity_card.md
+        source: >            
+          (
+            $entities := [$.business_entities.$spread().$merge([$.*, {"id": $keys($)}])];
+            $entities [id=$params.id];
+          )
+
+      # Получаем список бизнес-сущностей используемых в системах, все это выводим в таблицу
+      business_entities_table_in_systems:
+        type: table
+        headers:
+          - value: system_title
+            text: Система
+            sortable: true
+            align: left
+            link: link_to_system
+
+          - value: system_entities
+            text: Фильтр
+            link: link_to_system_entities
+            align: left
+            width: 10%
+
+          - value: title
+            text: Бизнес-сущность
+            sortable: true
+            align: left
+            link: link_to_entity
+
+          - value: id
+            text: ID в DocHub
+            sortable: true
+            align: left
+
+        source: swamp.dataset.business_entities_in_systems
+
+      # Выводим писок бизнес-сущностей используемых в системах полученных в запросе выше business_entities.in_systems
+      business_entities_in_systems:
+        type: markdown
+        template: business_entities_in_systems.md
+
+      # Наследуемся от таблицы business_entities.in_systems и делаем фильтр по конкретной системе
+      business_entities_table_in_systems.filtered:     # Дочерняя таблица
+        type: table
+        headers:
+          - value: system_title
+            text: Система
+            sortable: true
+            align: left
+            link: link_to_system
+
+          - value: title
+            text: Бизнес-сущность
+            sortable: true
+            align: left
+            link: link_to_entity
+
+          - value: id
+            text: ID в DocHub
+            sortable: true
+            align: left
+
+        origin: swamp.dataset.business_entities_in_systems       # Базовый источник данных
+        source: >
+          (
+              $[system_id=$params.system_id]
+          )
+
