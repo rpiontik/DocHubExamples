@@ -1,0 +1,5 @@
+imports:
+  # Подключаем модель
+  - business_entities_model.yaml
+  # Подключаем данные модели
+  - business_entities.yaml
