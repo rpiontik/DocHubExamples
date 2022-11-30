@@ -1,0 +1,21 @@
+docs:
+  kolobok.receipt:
+    type: markdown
+    location: Колобок/Рецепт
+    source: receipt.md
+  kolobok.song4hair:
+    type: markdown
+    location: Колобок/Песня для зайца
+    source: song4hair.md
+  kolobok.song4wolf:
+    type: markdown
+    location: Колобок/Песня для волка
+    source: song4wolf.md
+  kolobok.song4bear:
+    type: markdown
+    location: Колобок/Песня для медведя
+    source: song4bear.md
+  kolobok.song4fox:
+    type: markdown
+    location: Колобок/Песня для лисы
+    source: song4fox.md

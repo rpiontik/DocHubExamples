@@ -1,7 +1,7 @@
 imports:
   # Пример создания метамодели для описания в нотации C4 Model
-  # - src/C4Model/dochub.yaml
-  # Простой пример валидации сущностей в DocHub с выводом информации в меню
-  # - src/C4Model/dochub.yaml
-  # Пример создания динамического контекста
+#  - src/C4Model/dochub.yaml
+#  - src/validator_example/dochub.yaml
+#  - src/business_entity_management/dochub.yaml
+#  - src/sequences_entity_example/dochub.yaml
   - src/DynamicContext/dochub.yaml
