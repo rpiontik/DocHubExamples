@@ -1,0 +1,22 @@
+components:
+  grandma:
+    entity: actor
+    title: Баба
+  grandpa:
+    entity: actor
+    title: Дед
+  kolobok:
+    entity: entity # Для демонстрации автоопределения entity
+    title: Колобок
+  animals.hair:
+    entity: actor
+    title: Заяц
+  animals.wolf:
+    entity: actor
+    title: Волк
+  animals.bear:
+    entity: actor
+    title: Медведь
+  animals.fox:
+    entity: actor
+    title: Лиса
