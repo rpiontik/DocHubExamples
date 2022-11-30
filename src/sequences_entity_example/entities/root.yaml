@@ -1,0 +1,3 @@
+imports:
+  - manifest.yaml     # Файл с определениями видов сущностей
+  - sequences.yaml    # Описание сущностей с типом sequences
