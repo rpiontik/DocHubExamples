@@ -1,0 +1,97 @@
+components:
+  # Описываем L2
+
+  # **************************************
+  #      Платежный шлюз (payments)
+  # **************************************
+  # Здесь даем общую информацию о системе.
+  # Детали будем собирать автоматически из L2
+  payments:
+    title: Платежи
+    entity: component
+
+  # Подробно описываем L2
+  payments.gateway:
+    title: Шлюз
+    entity: component
+    links:
+      - title: API
+        id: payments.backend
+  payments.backend:
+    title: Микросервис оплаты
+    entity: component
+    links:
+      - id: payments.db
+  payments.db:
+    title: База платежей
+    entity: database
+
+  # **************************************
+  #      Подсистема заказов (orders)
+  # **************************************
+  # Аналогично, даем общую информацию
+  orders:
+    title: Заказы
+    entity: component
+
+  # Подробно описываем L2
+  orders.gateway:
+    title: Шлюз
+    entity: component
+    links:
+      - title: API
+        id: orders.backend
+  orders.backend:
+    title: Микросервис заказов
+    entity: component
+    links:
+      - id: orders.db
+      - id: payments.gateway
+        title: Оплаты
+      - id: auth.backend
+        title: Авторизация
+  orders.db:
+    title: База заказов
+    entity: database
+
+  # **************************************
+  #      Подсистема авторизации (auth)
+  # **************************************
+  auth:
+    title: Авторизация
+    entity: component
+  auth.gateway:
+    title: Шлюз
+    entity: component
+    links:
+      - title: API
+        id: auth.backend
+  auth.backend:
+    title: Микросервис авторизации
+    entity: component
+    links:
+      - id: auth.db
+  auth.db:
+    title: База пользователей
+    entity: database
+
+  # **************************************
+  #      Фронтэнд (front)
+  # **************************************
+  # Пользовательское приложение описываем
+  # только на L2
+  front:
+    entity: component
+    title: Приложение
+    links:
+      - id: orders.gateway
+      - id: auth.gateway
+
+  # **************************************
+  #      Описываем актора
+  # **************************************
+  customer:
+    entity: actor
+    title: Клиент
+    links:
+      - id: front

@@ -1,0 +1,5 @@
+imports:
+  # Подключаем компоненты L2 уровня
+  - components/root.yaml
+  # Подключаем контексты
+  - contexts/root.yaml

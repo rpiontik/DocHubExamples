@@ -1,0 +1,8 @@
+contexts:
+  L2:
+    title: L2 уровень
+    location: L2
+    components:
+      - "*.*" # Отбираем все компоненты второго уровня
+      - customer
+      - front

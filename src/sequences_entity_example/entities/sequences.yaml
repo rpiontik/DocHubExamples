@@ -1,0 +1,67 @@
+sequences:
+  story.pigs:
+    title: Сказка "колобок"
+    location: Документы/Колобок/Диаграмма
+    icon: swap_horiz
+    groups:
+      - title: Рождение колобка
+        triggers:
+          - Жили-были дед и баба
+        steps:
+          - from: grandpa
+            to: grandma
+            value: Испеки, старуха, колобок!
+          - from: grandma
+            to: grandma
+            value: Поскрести по сусекам
+          - from: grandma
+            to: kolobok
+            value: Испекла баба колобок
+            contract: kolobok.receipt
+        results:
+          - Колобок полежал—полежал, да вдруг и покатился
+      - title: Путешествие колобка
+        steps:
+          - from: animals.hair
+            to: kolobok
+            value: Колобок-колобок, я тебя съем
+          - from: kolobok
+            to: animals.hair
+            value: Я тебе песенку спою
+            contract: kolobok.song4hair
+            return:
+          - from: animals.wolf
+            to: kolobok
+            value: Колобок-колобок, я тебя съем
+          - from: kolobok
+            to: animals.wolf
+            value: Я тебе песенку спою
+            contract: kolobok.song4wold
+            return:
+          - from: animals.bear
+            to: kolobok
+            value: Колобок-колобок, я тебя съем
+          - from: kolobok
+            to: animals.bear
+            value: Я тебе песенку спою
+            contract: kolobok.song4bear
+            return:
+          - from: animals.fox
+            to: kolobok
+            value: Колобок-колобок, я тебя съем
+          - from: kolobok
+            to: animals.fox
+            value: Я тебе песенку спою
+            contract: kolobok.song4fox
+            return: Сядь-ка на мою мордочку да пропой еще разок погромче
+          - from: kolobok
+            to: animals.fox
+            value: вскочил на мордочку, поет еще раз
+            contract: kolobok.song4fox
+            return: Сядь-ка на мой язычок да пропой в последний разок
+          - from: kolobok
+            to: animals.fox
+            value: прыгнул на язычок
+            return: R.I.P.
+        results:
+          - Тут должна быть мораль сказки - не убегайте от бабушки!

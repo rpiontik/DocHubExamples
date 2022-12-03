@@ -1,3 +1,7 @@
 imports:
   # Пример создания метамодели для описания в нотации C4 Model
   - src/C4Model/dochub.yaml
+#  - src/validator_example/dochub.yaml
+#  - src/business_entity_management/dochub.yaml
+#  - src/sequences_entity_example/dochub.yaml
+#  - src/DynamicContext/dochub.yaml
