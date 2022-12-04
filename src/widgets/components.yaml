@@ -5,16 +5,25 @@ components:
     title: Пользователь
     links:
       - id: frontend
+        direction: <->
   frontend:
     entity: component
     title: Приложение
     links:
       - id: backend
+        direction: <->
+    aspects:
+      - ordering
+      - payment
   backend:
-    entity: Бэкенд
+    entity: component
     title: Сервер приложения
     links:
       - id: database
+        direction: <->
+    aspects:
+      - payment
+      - ordering
   database:
     entity: database
     title: База данных
