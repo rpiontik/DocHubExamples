@@ -1,4 +1,4 @@
-# Описываем акрхитектурные компоненты
+# Описываем акрхитектурные компоненты - https://dochub.info/docs/dochub.components
 components:
   user:
     entity: actor

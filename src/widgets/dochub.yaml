@@ -5,5 +5,5 @@ imports:
   - components.yaml
   # Подключаем аспекты
   - aspects.yaml
-  # Подключаем онтексты
+  # Подключаем контексты
   - contexts.yaml
