@@ -1,0 +1,4 @@
+# Подключаем расширения сущностей
+imports:
+  - aspects.yaml
+  - components.yaml

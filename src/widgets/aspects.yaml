@@ -1,0 +1,13 @@
+aspects:
+  ordering:
+    location: Заказы
+    title: Заказ товаров
+    prodact: Буренин Ольгерт Юрьевич
+    analyst: Семенов Руслан Вазенович
+    curator: Кучменко Татьяна Вадимовна
+  payment:
+    location: Оплаты
+    title: Оплаты товаров
+    prodact: Федоров Илья Степонович
+    analyst: Семенов Руслан Вазенович
+    curator: Зайчик Иван Макарович
