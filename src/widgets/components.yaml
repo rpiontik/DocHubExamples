@@ -1,0 +1,20 @@
+# Описываем акрхитектурные компоненты
+components:
+  user:
+    entity: actor
+    title: Пользователь
+    links:
+      - id: frontend
+  frontend:
+    entity: component
+    title: Приложение
+    links:
+      - id: backend
+  backend:
+    entity: Бэкенд
+    title: Сервер приложения
+    links:
+      - id: database
+  database:
+    entity: database
+    title: База данных

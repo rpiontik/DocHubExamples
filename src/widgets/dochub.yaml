@@ -1,0 +1,7 @@
+imports:
+  # Подключаем расширения сущностей
+  - entities/root.yaml
+  # Подключаем компоненты
+  - components.yaml
+  # Подключаем аспекты
+  - aspects.yaml
