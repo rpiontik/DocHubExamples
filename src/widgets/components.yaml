@@ -1,0 +1,29 @@
+# Описываем акрхитектурные компоненты - https://dochub.info/docs/dochub.components
+components:
+  user:
+    entity: actor
+    title: Пользователь
+    links:
+      - id: frontend
+        direction: <->
+  frontend:
+    entity: component
+    title: Приложение
+    links:
+      - id: backend
+        direction: <->
+    aspects:
+      - ordering
+      - payment
+  backend:
+    entity: component
+    title: Сервер приложения
+    links:
+      - id: database
+        direction: <->
+    aspects:
+      - payment
+      - ordering
+  database:
+    entity: database
+    title: База данных

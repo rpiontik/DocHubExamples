@@ -1,0 +1,14 @@
+# Описываем акрхитектурные аспекты - https://dochub.info/docs/dochub.aspects
+aspects:
+  ordering:
+    location: Заказы
+    title: Заказ товаров
+    prodact: Буренин Ольгерт Юрьевич
+    analyst: Семенов Руслан Вазгенович
+    curator: Кучменко Татьяна Вадимовна
+  payment:
+    location: Оплаты
+    title: Оплаты товаров
+    prodact: Федоров Илья Степанович
+    analyst: Семенов Руслан Вазгенович
+    curator: Зайчик Иван Макарович
