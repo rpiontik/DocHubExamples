@@ -1,0 +1,26 @@
+contexts: # Контексты представления прикладной архитектуры (pa - ПА)
+  swamp.crocodile.sid:
+    title: Архитектура S.ID (уровень ПА-L2)
+    location: L2/S.ID # Размещение документа в дереве навигации
+    extra-links: true
+    uml:
+      $notation: plantuml  # sber C4Model plantuml
+      $autor: Трубников Александр
+      $version: 0.0.1
+      $moment: 14.09.2022
+    components:
+      - swamp.crocodile.sid.app
+      - swamp.crocodile.sid.celery
+      - swamp.crocodile.sid.celery_beat
+      - swamp.crocodile.sid.crmclientvalid
+      - swamp.crocodile.sid.web
+      - swamp.crocodile.sid.profile_producer
+      - swamp.crocodile.sid.consumers.catalog_consumer
+      - swamp.crocodile.sid.consumers.smail_consumer
+      - swamp.crocodile.sid.consumers.spass_consumer
+      - swamp.crocodile.sid.consumers.zup_consumer
+      - swamp.crocodile.sid.pgbouncer
+      - swamp.crocodile.sid.db_postgresql
+      - swamp.crocodile.sid.redis_master
+      - swamp.crocodile.sid.celery_exporter
+      - swamp.crocodile.sid.postgres_exporter

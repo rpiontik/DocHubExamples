@@ -1,0 +1,31 @@
+datasets:
+  # Получаем список систем с линками на карточку системы
+  swamp.dataset.systems_list:
+    source: >
+      (
+        $REPO := $;
+        $DICTIONARIES := $REPO.dictionaries;
+        [$distinct([components.$spread().(
+          $COMPONENT_ID := $keys()[0];
+          $BASE_ID := $split($COMPONENT_ID, ".", 2) ~> $join('.');
+
+          $systems := $.*.(
+          $SYSTEM := $;
+          $ACCOUNT := $DICTIONARIES."accounts".parameters[name=$SYSTEM.budget_holder].title;
+          {
+            "id": $COMPONENT_ID,
+            "link_to_system": "/architect/components/" & $COMPONENT_ID,
+            "title": title,
+            "entity": entity,            
+            "deployment_card": "Ссылка",
+            "link_to_deployment_card": "/entities/clusters/check_system_du?id=" & $COMPONENT_ID,
+            "description": description,
+            "application_owner": application_owner,
+            "budget_holder": $ACCOUNT,
+            "owner_unit":  $BASE_ID ? $lookup($REPO.components, $BASE_ID).title : $BASE_ID
+          }
+          );
+          $systems[entity="system"];
+        )])^(id)]
+      )
+

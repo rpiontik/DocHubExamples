@@ -1,0 +1,543 @@
+entities:
+  # Типы кластеров
+  clusters:
+    title: Типы кластеров развертывания систем
+    description:
+      > # Описание сущности текст или ссылка на документ. Необязательно.
+      Типы кластеров развертывания систем ГК Болото
+    menu: >
+        (
+          $clusters := $.clusters;
+          $makeLocation := function($id) {(
+              $arrleft := function($arr ,$count) {
+                  $map($arr, function($v, $i) {
+                  $i <= $count ? $v
+                  })
+              };
+              $domains := $split($id, ".");
+              "Документы/02. Технологическая архитектура/Кластера ГК Болото/" & $join($map($domains, function($domain, $index) {(
+                  $lookup($clusters, $join($arrleft($domains, $index), ".")).title
+              )}), "/");
+          )};
+
+          $append([{
+                "icon": *.icon,                                                 /* Получаем иконку */
+                "link": "entities/clusters/tree",                           /* Ссылка на форму представления tree (дерево дерево объектов "interactions") */
+                "location": "Документы/02. Технологическая архитектура/Кластера ГК Болото"                                    /* Расположение в меню */
+            }],
+                [$.clusters.$spread().{
+                    "icon": *.icon,                                             /* Получаем иконку */
+                    "link": "entities/clusters/cluster_deployment_diagram?id=" & $keys()[0],     /* Формируем ссылку на бланк документ */
+                    "location": $makeLocation($keys()[0])                       /* Формируем расположение в меню */
+                }][location]
+            );
+        )
+
+    presentations:
+      tree:
+        type: plantuml
+        template: template/tree.puml
+        source: >
+          (
+              $set("rpev-id", undefined);
+              $arrleft := function($arr ,$count) {
+                  $map($arr, function($v, $i) {
+                      $i <= $count ? $v
+                  })
+              };
+              $clusters := $.clusters;
+              [$clusters.$spread().($merge([{"id" : $keys()[0]}, $.*]))^(id).(
+                  $prev_nodes := $split($get("rpev-id"), ".");
+                  $prev_level := $count($prev_nodes);
+                  $curr_nodes := $split(id, ".");
+                  $set("isdiff", false);
+                  $result := $map($curr_nodes, function($v, $i) {(
+                      $set("isdiff", $get("isdiff") or $prev_level = 0 or $prev_level <= $i or $v != $prev_nodes[$i]) ? (
+                          $id := $join($arrleft($curr_nodes, $i), ".");
+                          $cluster :=  $lookup($clusters, $id);
+                          {
+                              "id": $id,
+                              "level": $pad("", $i + 2, "*"),
+                              "title": $cluster ? $cluster.title : $id,
+                              "link": "/entities/clusters/cluster_deployment_diagram?id=" & $id
+                          }
+                      );
+                  )});
+                  $set("rpev-id", id);
+                  $result
+              )];
+          )
+
+      cluster_deployment_diagram:        
+        type: mermaid        
+        template: template/deployment_diagram.mmd 
+        source: >
+          (
+            $cluster_id := $params.id;
+          /*$cluster_id := "prod";*/
+            $levels := $split($cluster_id , ".");
+            $level := $count($levels);
+            $_clusters := $.clusters;
+            $clusters := $lookup($_clusters, $cluster_id);
+            $_systems := $.components;
+            $pattern := $eval("/^" & ($level = 1 ? $cluster_id & "." : $cluster_id ) & "[a-zA-Z0-9\\_]*$/");
+            $nodes := $_clusters.$sift(function($v, $k) {$k ~> $pattern}).$spread().(
+              $cluster_id := $keys()[0];
+              $cluster_type := $substringBefore($cluster_id, ".");
+              $cluster_du := $.*.deployment_units.$spread().(	              
+                $cl_system_id := $keys()[0];
+                $cl_system := $;
+                $system := $lookup($_systems, $cl_system_id);
+                $components := $cl_system.*.$spread().(				
+                  $component_id := $cl_system_id & "." &  $keys()[0];
+                  $component := $lookup($_systems, $component_id);
+                  $.*.$spread().(
+                    $du_id := $;
+                    $du_pattern := $eval("/^" & $du_id & "/");
+                    $node := $component.deployment_units.$sift(function($v, $k) {$k ~> $du_pattern}).*.{
+                      "du_id": $du_id,
+                      "system_id": $cl_system_id ,
+                      "component_id":  $component_id,
+                      "cluster": $cluster_id,
+                      "namespace": $system.title,
+                      "cpu": cpu,
+                      "ram": ram,
+                      "storage_size": storage_size
+                    };
+                  );
+                );
+              );
+            );
+
+            $objects := $nodes{
+              `cluster`: {		
+                `namespace`: {		
+                  "cpu": $sum(cpu) & "Core",
+                  "ram": $sum(ram) & "Gb",
+                  "storage_size": $sum(storage_size) & "Gb",
+                  "namespace": $distinct(namespace),
+                  "cluster": $distinct(cluster),
+                  "system_id": $distinct(system_id)
+                  }
+              }
+            };
+
+            $du := function($cluster_du, $entity) {(
+              $join($cluster_du.*.(
+                $title := "![" & namespace & "](/entities/clusters/system_deployment_diagram?parent=" & system_id & ":" & cluster & ")";
+                $entity & "("& cluster & "_" & system_id & ", \"" & $title & "\",, \"" & "RAM " & ram & ";<br/> CPU: " & cpu & ";<br/> Storage: " & storage_size & "\")"
+              ), "\n") & "\n"
+            )};
+
+            $code := $join($objects.$spread().(
+              $id := $keys()[0];
+              $cluster_temp := $lookup($_clusters, $id);
+              "Deployment_Node(" & $id & ", \"" & $cluster_temp.title & "\", \"" & $cluster_temp.resource_type & "\") {\n" & $du($.*, $cluster_temp.entity) & "\n}" ;
+            ), "\n");
+
+            {
+              "notation": "C4Deployment",
+              "code":
+                $count($nodes) > 0
+                ? $code
+                : "Deployment_Node(empty_node, \"\") {\nContainer(cempty, \"Добавьте к соответствующему кластеру необходимые deployment units\")\n}",
+              "title": $clusters.description
+            };
+
+          )
+
+      cluster_deployment_diagram_v1:  # Оставил для теста    
+        type: mermaid        
+        template: template/deployment_diagram.mmd 
+        source: >
+          (
+            $cluster_id := $params.id;
+            $clusters := $.clusters;
+            $_clusters := $lookup($clusters, $cluster_id);
+            $systems := $.components;
+            $dep_units := deployment_units;
+            $nodes := $dep_units.$spread().(
+              $du_id := $keys()[0];
+              $system_id := $split($substringAfter($du_id, "."), ".", 3) ~> $join('.');
+              $_system := $lookup($systems, $system_id);
+              $assert($type($_system.title)="string", "Для deployment unit " & $du_id & " указан некорректный идентификатор. Идентификатор должен содержать в себе идентификатор cистемы. Система с идентификатором " & $system_id & " не найдена. Исправьте идентификатор и повторите операцию.");
+              $component_id := $substringAfter($du_id, ".");
+
+              $du := $.*;		
+              $node := $filter($du, function($v, $i, $a) {$contains($v."resource_allocation"."cluster", $cluster_id)}).
+              $merge([$ , {"du_id": $du_id }]).
+              $merge([$ , {"system_id": $system_id}]).
+              $merge([$ , {"component_id": $component_id}]).
+              $merge([$ , {"system_title": $_system.title}]).
+              $merge([$ , {"system_entity": $lookup( $systems, $component_id ).entity}]);
+              
+              $node.{
+              "du_id": $du_id,
+              "system_id": system_id,
+              "component_id": component_id,
+              "cluster": resource_allocation.cluster,		
+              "namespace": $type(resource_allocation.namespace)="string" ? resource_allocation.namespace : system_title,
+              "cpu_type": resource_req.cpu_type,
+              "cpu": resource_req.cpu,
+              "ram": resource_req.ram,
+              "storage_type": resource_req.storage_type,
+              "storage_size": resource_req.storage_size
+              };
+            );
+
+            $objects := $nodes{
+              `cluster`: {		
+                `namespace`: {		
+                  "cpu": $sum(cpu) & "Core",
+                  "ram": $sum(ram) & "Gb",
+                  "storage_size": $sum(storage_size) & "Gb",
+                  "namespace": $distinct(namespace),
+                  "cluster": $distinct(cluster),
+                  "system_id": $distinct(system_id)
+                  }
+              }
+            };
+
+            $du := function($cluster_du, $entity) {(
+              $join($cluster_du.*.(
+                $title := "![" & namespace & "](/entities/clusters/system_deployment_diagram?parent=" & system_id & ":" & cluster & ")";
+                $entity & "("& cluster & "_" & system_id & ", \"" & $title & "\",, \"" & "RAM " & ram & ";<br/> CPU: " & cpu & ";<br/> Storage: " & storage_size & "\")"
+              ), "\n") & "\n"
+            )};
+
+            $code := $join($objects.$spread().(
+              $id := $keys()[0];
+              $cluster_temp := $lookup($clusters, $id);
+              "Deployment_Node(" & $id & ", \"" & $cluster_temp.title & "\", \"" & $cluster_temp.resource_type & "\") {\n" & $du($.*, $cluster_temp.entity) & "\n}" ;
+            ), "\n");
+
+            {
+              "notation": "C4Deployment",
+              "code":
+                $count($nodes) > 0
+                ? $code
+                : "Deployment_Node(empty_node, \"\") {\nContainer(cempty, \"Заполните deployment units для этого кластера\")\n}",
+              "title": $_clusters.description
+            };
+
+          )
+
+      system_deployment_diagram:
+        type: mermaid        
+        template: template/deployment_diagram.mmd 
+        source: >
+          ( 
+            $options := $split($params.parent, ":");            
+            $system_id := $options[0]; 
+          /*$system_id := "swamp.crocodile";*/
+            $_systems := $.components;
+            $system := $lookup($_systems, $system_id);
+            $assert($type($system.title)="string", "В запрос system_deployment_diagram в качестве параметра передан некорректный идентификатор системы: " & $system_id & ". Исправьте идентификатор и повторите операцию.");
+            $cluster_id := $options[1];
+          /*$cluster_id := "";*/
+            $cluster_filtred := $type($cluster_id)="string" ? true: false;
+            $dictionaries := dictionaries;
+            $_clusters := $.clusters;      
+            $cl_pattern := $eval("/^" &  $cluster_id & "/"); 
+            $nodes:= $cluster_filtred = true
+              ? $_clusters.$sift(function($v, $k) {$k ~> $cl_pattern})
+              : $_clusters;
+            $sys_pattern := $eval("/^" &  $system_id & "/"); 
+            $nodes := $nodes.$spread().(
+              $cluster_id := $keys()[0];
+              $du := $.*.deployment_units.$sift(function($v, $k) {$k ~> $sys_pattern}).$spread().(	              
+                $cl_system_id := $keys()[0];
+                $cl_system := $;
+                $components := $cl_system.*.$spread().(				
+                  $component_id := $cl_system_id & "." &  $keys()[0];
+                  $component := $lookup($_systems, $component_id);
+                  $assert($type($component.title)="string", "В кластере " & $cluster_id & " для системы: " & $system_id & " некорректно указан идентификатор компоненты " & $component_id & ". Исправьте идентификатор и повторите операцию.");
+                  $entity_dochub := $dictionaries."settings.entity".parameters[dochub=$component.entity];
+                  $entity := $type($entity_dochub.dochub)="string" ? $entity_dochub.mermaid : "Container";
+                  $.*.(
+                    $du_id := $;
+                    $du_pattern := $eval("/^" & $du_id & "/");
+                    $node := $component.deployment_units.$sift(function($v, $k) {$k ~> $du_pattern}).*.{
+                      "du_id": $du_id & "." & $component_id,
+                      "du": $du_id,
+                      "component_id":  $component_id,
+                      "system": $cl_system_id ,
+                      "cluster": $cluster_id,
+                      "component_title": $component.title,		
+                      "component_entity": $entity,		              		              
+                      "cpu_type": cpu_type,
+                      "cpu": cpu,
+                      "ram": ram,
+                      "storage_type": storage_type,
+                      "storage_size": storage_size
+                    };
+                  );
+                );
+              );
+            );
+
+            $objects := $nodes{
+              `cluster`: {		
+                `system`: {	
+                `du_id`: {	
+                  "id": du_id,
+                  "du": du,
+                  "cpu": cpu & "Core",
+                  "cpu_type": cpu_type,
+                  "ram": ram & "Gb",
+                  "storage_size": storage_size & "Gb",
+                  "storage_type": storage_type,
+                  "component_title": component_title,
+                  "component_entity": component_entity
+                  }}
+              }
+            };
+
+            $du := function($system_du) {(
+              $join($system_du.*.(                
+                component_entity & "("& id & ", \"" &component_title & " (" & du & ")\",, \"" & "<br/> RAM " & ram & ";<br/> CPU type: " & cpu_type & ";<br/> CPU: " & cpu & "; <br/>Storage type: " & storage_type & "; <br/>Storage: " & storage_size & "\")"
+              ), "\n") & "\n"
+            )};
+
+            $system_du := function($cluster_du, $cluster_id) {(
+              $join($cluster_du.$spread().(               
+              $system_id := $keys()[0];
+              $system := $lookup($_systems, $system_id);
+              $system_title :=$system.title;
+              $system_short_description :=$system.short_description;
+              "Deployment_Node(" & $cluster_id & "_" & $system_id & ", \"" & "Deployment units для системы " & $system_title & "\", \"" & $system_short_description & "\") {\n" & $du($.*) & "\n}" ;
+              ), "\n") & "\n"
+            )};
+
+            $code := $join($objects.$spread().(
+              $id := $keys()[0];
+              $cluster_temp := $lookup($_clusters, $id);
+              "Deployment_Node(" & $id & ", \"" & $cluster_temp.description & "\", \"" & $cluster_temp.resource_type & "\") {\n" & $system_du($.*, $id) & "\n}" ;
+            ), "\n");
+            
+            {
+              "notation": "C4Deployment",
+              "code":
+                $count($nodes) > 0
+                ? $code
+                : "Deployment_Node(empty_node, \"\") {\nContainer(cempty, \"Заполните deployment units для этого кластера\")\n}",
+              "title": "Диаграммы развертывания для системы " & $system.title
+            };
+          )
+
+      system_deployment_diagram_v1: # Оставил для теста      
+        type: mermaid        
+        template: template/deployment_diagram.mmd 
+        source: >
+          ( 
+            $options := $split($params.parent, ":");            
+            $system_id := $options[0]; 
+            $systems := $.components;
+            $_system := $lookup($systems, $system_id);
+            $assert($type($_system.title)="string", "В запрос system_deployment_diagram в качестве параметра передан некорректный идентификатор системы: " & $system_id & ". Исправьте идентификатор и повторите операцию.");
+            $cluster_id := $options[1];
+            $cluster_filtred := $count($options) = 2 ? true: false;
+            $clusters := $.clusters;            
+            $dictionaries := dictionaries;
+            $dep_units := deployment_units;
+            $pattern := $eval("/^" & "[a-zA-Z0-9\\_]*" & "." & $system_id & "/");
+            $nodes := $dep_units.$sift(function($v, $k) {$k ~> $pattern}).$spread().(
+              $du_id := $keys()[0];
+              $system_id := $split($substringAfter($du_id, "."), ".", 3) ~> $join('.');
+              $component_id := $substringAfter($du_id, ".");
+              $du := $.*;
+              $node := $cluster_filtred = true
+              ? $filter($du, function($v, $i, $a) {$contains($v."resource_allocation"."cluster", $cluster_id)})
+              : $du;
+              $node.$merge([$ , {"du_id": $du_id }]).
+                $merge([$ , {"system_id": $system_id}]).
+                $merge([$ , {"component_id": $component_id}]).
+                $merge([$ , {"system": $system_id}]).(
+                  $component := $lookup( $systems, $component_id);
+                  $assert($type($component.title)="string", "Для deployment unit " & $du_id & " указан некорректный идентификатор. Идентификатор должен содержать в себе идентификатор run-time компоненты. Компонент с идентификатором " & $component_id & " не найден. Исправьте идентификатор и повторите операцию.");
+                  $entity_dochub := $dictionaries."settings.entity".parameters[dochub=$component.entity];
+                  $entity := $type($entity_dochub.dochub)="string" ? $entity_dochub.mermaid : "Container";
+                  $merge([$ , {"component_title": $component.title}]).
+                  $merge([$ , {"component_entity": $entity}])
+                  {
+                  "du_id": $du_id,              
+                  "component_id": component_id,
+                  "system": system_id,                
+                  "cluster": resource_allocation.cluster,		
+                  "component_title": component_title,		
+                  "component_entity": component_entity,		              
+                  "cpu_type": resource_req.cpu_type,
+                  "cpu": resource_req.cpu,
+                  "ram": resource_req.ram,
+                  "storage_type": resource_req.storage_type,
+                  "storage_size": resource_req.storage_size
+                  }
+                );	
+              );
+
+            $objects := $nodes{
+              `cluster`: {		
+                `system`: {	
+                `du_id`: {	
+                  "id": du_id,
+                  "cpu": cpu & "Core",
+                  "cpu_type": cpu_type,
+                  "ram": ram & "Gb",
+                  "storage_size": storage_size & "Gb",
+                  "storage_type": storage_type,
+                  "component_title": component_title,
+                  "component_entity": component_entity
+                  }}
+              }
+            };
+
+            $du := function($system_du) {(
+              $join($system_du.*.(                
+                component_entity & "("& id & ", \"" &component_title & "\",, \"" & "<br/> RAM " & ram & ";<br/> CPU type: " & cpu_type & ";<br/> CPU: " & cpu & "; <br/>Storage type: " & storage_type & "; <br/>Storage: " & storage_size & "\")"
+              ), "\n") & "\n"
+            )};
+
+            $system_du := function($cluster_du, $cluster_id) {(
+              $join($cluster_du.$spread().(               
+              $system_id := $keys()[0];
+              $system := $lookup( $systems, $system_id);
+              $system_title :=$system.title;
+              $system_short_description :=$system.short_description;
+              "Deployment_Node(" & $cluster_id & "_" & $system_id & ", \"" & $system_title & "\", \"" & $system_short_description & "\") {\n" & $du($.*) & "\n}" ;
+              ), "\n") & "\n"
+            )};
+
+            $code := $join($objects.$spread().(
+              $id := $keys()[0];
+              $cluster_temp := $lookup($clusters, $id);
+              "Deployment_Node(" & $id & ", \"" & $cluster_temp.description & "\", \"" & $cluster_temp.resource_type & "\") {\n" & $system_du($.*, $id) & "\n}" ;
+            ), "\n");
+
+            {
+              "notation": "C4Deployment",
+              "code":
+                $count($nodes) > 0
+                ? $code
+                : "Deployment_Node(empty_node, \"\") {\nContainer(cempty, \"Заполните deployment units для этого кластера\")\n}",
+              "title": "Диаграммы развертывания для системы " & $_system.title
+            };
+          )
+
+
+      system_deployment_table:
+        location: test
+        type: table
+        headers:
+          - value: cluster
+            text: Cluster
+            sortable: true
+            align: left
+            link: link_to_cluster
+
+          - value: du_id
+            text: DU ID
+            sortable: true
+            align: left   
+
+          - value: component_id
+            text: Component ID
+            sortable: true
+            align: left
+            link: link_to_component
+
+          - value: resources
+            text: Resources
+            sortable: true
+            align: left
+        source: >
+          (
+            $system_id := $params.system_id;            
+            /*$system_id := "swamp.crocodile";*/
+            $_systems := $.components;
+            $system := $lookup($_systems, $system_id);
+            $assert($type($system.title)="string", "В запрос system_deployment_table в качестве параметра передан некорректный идентификатор системы: " & $system_id & ". Исправьте идентификатор и повторите операцию.");
+            $comp_pattern := $eval("/^" & $system_id & "./");
+            $comp_nodes := $_systems.$sift(function($v, $k) {$k ~> $comp_pattern}).$spread().(                	
+              $component_id := $keys()[0];			
+              $system := $.*;
+              $title := $system.title;
+              $du := $system.deployment_units.$spread().(			
+                $du_id := $keys()[0];			
+                $.*.{
+                  "id": $du_id & "." & $component_id,
+                  "du_id": $du_id,
+                  "component_id":  $component_id,
+                  "link_to_component":  "/architect/components/" & $component_id,                  	                     
+                  "component_title": $title,
+                  "resources": "RAM: " & ram & "Gb" & "\n"
+                    & "CPU type: " & cpu_type & "\n"
+                    & "CPU: " & cpu & "Core" & "\n"
+                    & "Storage type: " & storage_type & "\n"
+                    & "Storage: " & storage_size & "Gb"
+                };
+              );		
+            );
+
+            $comp_nodes := $comp_nodes{
+              `id`: {
+                "id": id,
+                "du_id": du_id,
+                "component_id":  component_id,	                     
+                "component_title": component_title,
+                "resources": resources,
+                "link_to_component": link_to_component
+                }
+              };
+
+            $_clusters := $.clusters; 
+            $sys_pattern := $eval("/^" &  $system_id & "/");
+            $cl_nodes := $_clusters .$spread().(
+              $cluster_id := $keys()[0];
+              $du := $.*.deployment_units.$sift(function($v, $k) {$k ~> $sys_pattern}).$spread().(
+                $cl_system_id := $keys()[0];
+                $cl_system := $;
+                $components := $cl_system.*.$spread().(				
+                  $component_id := $cl_system_id & "." &  $keys()[0];
+                  $component := $lookup($_systems, $component_id);
+                  $assert($type($component.title)="string", "В кластере " & $cluster_id & " для системы: " & $system_id & " некорректно указан идентификатор компоненты " & $component_id & ". Исправьте идентификатор и повторите операцию.");
+                  $.*.(
+                    $du_id := $;
+                    {
+                    "id": $ & "." & $component_id,
+                    "cluster": $cluster_id
+                    };
+                  );
+                );
+              );
+            );
+
+            $cl_nodes := $cl_nodes {
+              `id`: {
+                "id": id,
+                "cluster": cluster,
+                "link_to_cluster": "/entities/clusters/system_deployment_diagram?parent=" & $system_id & ":" & cluster
+              }
+            };
+            
+            $nodes := $mergedeep([$comp_nodes, $cl_nodes]);
+            $nodes.*.{
+              "component_id": component_id,
+              "du_id": du_id,
+              "component_title": component_title,
+              "resources": resources,
+              "cluster": cluster,
+              "link_to_component": link_to_component,
+              "link_to_cluster": link_to_cluster
+            }^(cluster);
+          )
+
+
+      # Лист проверки привязки deployment_units к кластеру для системы
+      check_system_du:
+        type: markdown
+        template: deployment_card.md
+        source: >
+          (
+            $systems := [$.components.$spread().$merge([$.*, {"id": $keys($)}])];
+            $systems [id=$params.id];
+          )
