@@ -9,5 +9,7 @@ imports:
 #  - src/sequences_entity_example/dochub.yaml
 # 5. Динамические контексты
 #  - src/DynamicContext/dochub.yaml
-# 5. Пример встраивание виджетов в представления Components и Aspects
-  - src/widgets/dochub.yaml
+# 6. Пример встраивание виджетов в представления Components и Aspects
+#  - src/widgets/dochub.yaml
+# 7. Пример управления процессом развертывания систем в кластерах
+  - src/deployment_units_management/dochub.yaml
