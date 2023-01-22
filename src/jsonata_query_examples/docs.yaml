@@ -1,0 +1,7 @@
+docs:
+  jsonata_query_example:
+    location: Примеры запросов JSONata
+    description: Примеры запросов JSONata
+    type: markdown
+    source: jsonata_query_example.md
+    
