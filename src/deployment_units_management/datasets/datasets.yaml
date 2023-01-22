@@ -18,7 +18,7 @@ datasets:
             "title": title,
             "entity": entity,            
             "deployment_card": "Ссылка",
-            "link_to_deployment_card": "/entities/clusters/check_system_du?id=" & $COMPONENT_ID,
+            "link_to_deployment_card": "/entities/clusters/deployment_card?id=" & $COMPONENT_ID,
             "description": description,
             "application_owner": application_owner,
             "budget_holder": $ACCOUNT,
