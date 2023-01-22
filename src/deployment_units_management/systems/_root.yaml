@@ -1,0 +1,10 @@
+imports:
+  - components/_root.yaml
+  - 1cbit_finance.yaml
+  - allure.yaml
+  - crm.yaml
+  - grafana_dev.yaml
+  - spact.yaml
+  - spoll.yaml
+  - sid.yaml
+  - srole.yaml

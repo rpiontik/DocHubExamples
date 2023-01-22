@@ -1,0 +1,151 @@
+clusters:
+  prod:
+    title: 01. Продуктовые кластера
+    description: Диаграммы развертывания для Продуктовых кластеров
+  prod.k8s:
+    title: Kubernetes - prod
+    description: Диаграмма развертывания для Продуктового кластера Kubernetes
+    resource_type: k8s #k8s/vm/phisycal
+    entity: Container
+    deployment_units:
+      swamp.crocodile.sid:
+        app:
+          - prod.main
+          - prod.slave
+        celery:
+          - prod.main
+        celery_beat:
+          - prod.main
+        crmclientvalid:
+          - prod.main
+        web:
+          - prod.main
+        profile_producer:
+          - prod.main
+        consumers.catalog_consumer:
+          - prod.main
+        consumers.smail_consumer:
+          - prod.main
+        consumers.spass_consumer:
+          - prod.main
+        consumers.zup_consumer:
+          - prod.main
+        pgbouncer:
+          - prod.main
+        celery_exporter:
+          - prod.main
+        postgres_exporter:
+          - prod.main
+      swamp.crocodile.srole:
+        app:
+          - prod.main
+        celery:
+          - prod.main
+        web:
+          - prod.main
+  prod.physical_db:
+    title: Физический кластер БД - prod
+    description: Диаграмма развертывания для Продуктового физического кластера баз данных
+    resource_type: phisycal #k8s/vm/phisycal
+    entity: ContainerDb
+  prod.virtual_db:
+    title: Виртуальный кластер БД - prod
+    description: Диаграмма развертывания для Продуктового виртуального кластера баз данных
+    resource_type: vm #k8s/vm/phisycal
+    entity: ContainerDb
+    deployment_units:
+      swamp.crocodile.sid:
+        db_postgresql:
+          - prod.main
+        redis_master:
+          - prod.main      
+      swamp.crocodile.srole:
+        db_postgresql:
+          - prod.main
+        redis_master:
+          - prod.main
+
+  stage:
+    title: 02. Стейдж-кластера
+    description: Диаграммы развертывания для Стейдж-кластеров
+  stage.k8s:
+    title: Kubernetes - stage
+    description: Диаграмма развертывания для стейдж-кластера Kubernetes
+    resource_type: k8s #k8s/vm/phisycal
+    entity: Container
+    deployment_units:
+      swamp.crocodile.sid:
+        app:
+          - stage.main
+        celery:
+          - stage.main
+        celery_beat:
+          - stage.main
+        crmclientvalid:
+          - stage.main
+        web:
+          - stage.main
+        profile_producer:
+          - stage.main
+        consumers.catalog_consumer:
+          - stage.main
+        consumers.smail_consumer:
+          - stage.main
+        consumers.spass_consumer:
+          - stage.main
+        consumers.zup_consumer:
+          - stage.main
+        pgbouncer:
+          - stage.main
+        celery_exporter:
+          - stage.main
+        postgres_exporter:
+          - stage.main
+      swamp.crocodile.srole:
+        app:
+          - stage.main
+        celery:
+          - stage.main
+        web:
+          - stage.main
+  stage.physical_db:
+    title: Физический кластер БД - stage
+    description: Диаграмма развертывания для Физического стейдж-кластера баз данных
+    resource_type: phisycal #k8s/vm/phisycal
+    entity: ContainerDb
+  stage.virtual_db:
+    title: Виртуальный кластер БД - stage
+    description: Диаграмма развертывания для Виртуального стейдж-кластера баз данных
+    resource_type: vm #k8s/vm/phisycal
+    entity: ContainerDb
+    deployment_units:
+      swamp.crocodile.sid:
+        db_postgresql:
+          - stage.main
+        redis_master:
+          - stage.main      
+      swamp.crocodile.srole:
+        db_postgresql:
+          - stage.main
+        redis_master:
+          - stage.main
+
+  dev:
+    title: 03. Кластера разработки
+    description: Диаграммы развертывания для Кластеров разработки
+  dev.k8s:
+    title: Kubernetes - dev
+    description: Диаграмма развертывания для Кластера разработки Kubernetes
+    resource_type: k8s #k8s/vm/phisycal
+    entity: Container
+  dev.physical_db:
+    title: Физический кластер БД - dev
+    description: Диаграмма развертывания для Физического кластера разработки баз данных
+    resource_type: phisycal #k8s/vm/phisycal
+    entity: ContainerDb
+  dev.virtual_db:
+    title: Виртуальный кластер БД - dev
+    description: Диаграмма развертывания для Виртуального кластера разработки баз данных
+    resource_type: vm #k8s/vm/phisycal
+    entity: ContainerDb
+
