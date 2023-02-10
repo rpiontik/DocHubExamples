@@ -1,0 +1,6 @@
+docs:
+  getting-started.roadmap:
+    type: Markdown
+    source: ./README.md
+    location: Адаптация DocHub для компании
+  
