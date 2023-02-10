@@ -1,0 +1,10 @@
+docs:
+  dochub.welcome:
+    type: Markdown
+    source: ./README.md
+
+aspects:
+components:
+contexts:
+technologies:
+  items:

@@ -3,4 +3,72 @@ docs:
     type: Markdown
     source: ./README.md
     location: Адаптация DocHub для компании
-  
+
+aspects:
+  arch-develop:
+    title: Разработка кода архитектуры
+    location: имплементации DocHub / Разработка кода архитектуры
+contexts:
+  dochub.implemantation-process:                   
+    title: Процесс имплементации DocHub              
+    location: Начало имплементации DocHub          
+    components:               
+      - dochub                
+      - adrdeveloper
+      - devsecopsman
+      - dochub.public-dockerimage
+    aspects:
+components:
+  adrdeveloper:                       
+    title: Лицо принимающее архитектурные решения      
+    entity: actor             
+    links:                    
+      - id: dochub            
+        direction: <-->       
+        title: Использует для обучения
+    aspects:
+      - arch-develop      
+  archrepo:
+    title: Репозиторий исходного кода архитектуры
+    entity: collections
+    technologies: 
+      - dcvs.git
+    aspects:
+  devsecopsman:                       
+    title: Человек имеющий ценности DevSecOps      
+    entity: actor             
+    links:                    
+      - id: dochub            
+        direction: <-->       
+        title: Использует для обучения      
+  dochub.public-dockerimage:
+    title: Публичный Docker образ Dochub  
+    aspects:
+
+technologies:
+  sections:
+    clitools:
+      title: Консольные утилиты
+    ide:
+      title: Среды разработки
+    infrastructure.providers:
+      title: Провайдеры инфраструктуры
+  items:
+    containers.docker:
+      aliases:
+        - docker
+    gnu.make:
+      aliases:
+        - make
+    dcvs.git:
+      aliases:
+        - git
+    open.vscodium:
+      aliases:
+        - codium-ide
+    jetbrains.idea:
+      aliases:
+        - idea-ide
+    microsoft.vscode:
+      aliases:
+        -  vscode
