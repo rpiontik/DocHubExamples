@@ -5,6 +5,24 @@ docs:
 
 aspects:
 components:
+  enterprise: # Корневой компонент (домен)
+    title: Холдинг "Замечательный"
+  enterprise.systems:
+    title: Системы учета хозяйственных операций
+  enterprise.systems.accounting: 
+    title: Бухгалтерия предприятия
+  enterprise.systems.accounting.standaloneclient:
+    title: Клиентское окно сотрудника бухгалтерии
+  enterprise.systems.accounting.backendlogic:
+    title: Серверная логика системы бухгалтерского учета
+  enterprise.systems.accounting.database:
+    title: Хранилище данных (СУБД) бухгалтерского учета  
+
 contexts:
+  arch.all.systems:
+    title: Все наши системы 
+    location: Верхнеуровневый прикладной ландшафт/Холдинг Замечательный
+    components:
+      - enterprise.systems.*
 technologies:
   items:
