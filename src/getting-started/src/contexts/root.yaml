@@ -1,0 +1,6 @@
+contexts:
+  arch.all.systems:
+    title: Все наши системы 
+    location: Верхнеуровневый прикладной ландшафт/Холдинг Замечательный
+    components:
+      - enterprise.systems.*

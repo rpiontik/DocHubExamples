@@ -3,7 +3,6 @@ docs:
     type: Markdown
     source: ./README.md
 
-aspects:
 components:
   enterprise: # Корневой компонент (домен)
     title: Холдинг "Замечательный"
@@ -17,12 +16,3 @@ components:
     title: Серверная логика системы бухгалтерского учета
   enterprise.systems.accounting.database:
     title: Хранилище данных (СУБД) бухгалтерского учета  
-
-contexts:
-  arch.all.systems:
-    title: Все наши системы 
-    location: Верхнеуровневый прикладной ландшафт/Холдинг Замечательный
-    components:
-      - enterprise.systems.*
-technologies:
-  items:
