@@ -1,0 +1,43 @@
+
+aspects:
+  learning:
+    title: Обучение на примерах
+    location: Обучение
+components:
+  adruser:                       # Идентификатор компонента
+    title: Лицо принимающее архитектурные решения       # Название
+    entity: actor             # Представление на схеме
+    links:                    # Компоненты с которым происходит взаимодействие
+      - id: dochub            # Идентификатор компонента
+        direction: <-->       # Направление взаимодействия (<-- | -- | --> | <-->)
+        title: Использует для обучения        # Смысл взаимодействия
+ 
+  dochub:
+    title: Хаб архитектора
+    entity: collections
+    technologies: 
+      - dochub
+    aspects:              
+      - learning
+contexts:
+  overview:                   
+    title: Обзор              
+    location: Пример          
+    components:               
+      - dochub                
+      - adruser
+docs:
+  dochub.welcome:
+    type: markdown
+    location: Главная
+    source: WELCOME.md
+technologies:
+  sections:
+    services:
+      title: Сервисы
+  items:
+    dochub:
+      aliases: 
+        - arc42hub
+      section: services
+      status: adopt

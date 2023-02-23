@@ -1,9 +1,12 @@
+# примеры архитектурных описаний
 imports:
+# 0. Пример описания самого репозитория примеров
+- src/Self/dochub.yaml
 # 1. Пример создания метамодели для описания в нотации C4 Model
 #  - src/C4Model/dochub.yaml
 # 2. Валидации сущностей в DocHub с выводом информации в меню
 #  - src/validator_example/dochub.yaml
-# 3. Управление бизнес-сущностями
+# 3. Управление бизнес-сущностями  
 #  - src/business_entity_management/dochub.yaml
 # 4. Пример сущности для бизнес-процессов
 #  - src/sequences_entity_example/dochub.yaml
@@ -14,4 +17,4 @@ imports:
 # 7. Пример управления процессом развертывания систем в кластерах
 #  - src/deployment_units_management/dochub.yaml
 # 8. Примеры запросов JSONata
-  - src/jsonata_query_examples/dochub.yaml
+#  - src/jsonata_query_examples/dochub.yaml
