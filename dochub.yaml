@@ -1,5 +1,7 @@
 # примеры архитектурных описаний
 imports:
+# 0. Пример описания самого репозитория примеров
+- src/Self/dochub.yaml
 # 1. Пример создания метамодели для описания в нотации C4 Model
 #  - src/C4Model/dochub.yaml
 # 2. Валидации сущностей в DocHub с выводом информации в меню
@@ -17,45 +19,4 @@ imports:
 # 8. Примеры запросов JSONata
 #  - src/jsonata_query_examples/dochub.yaml
 # 9  Пример начала внедрения DocHub в вашем коллективе
-  - src/getting-started/dochub.yaml
-aspects:
-  learning:
-    title: Обучение на примерах
-    location: Обучение
-components:
-  adruser:                       # Идентификатор компонента
-    title: Лицо принимающее архитектурные решения       # Название
-    entity: actor             # Представление на схеме
-    links:                    # Компоненты с которым происходит взаимодействие
-      - id: dochub            # Идентификатор компонента
-        direction: <-->       # Направление взаимодействия (<-- | -- | --> | <-->)
-        title: Использует для обучения        # Смысл взаимодействия
- 
-  dochub:
-    title: Хаб архитектора
-    entity: collections
-    technologies: 
-      - dochub
-    aspects:              
-      - learning
-contexts:
-  overview:                   
-    title: Обзор              
-    location: Пример          
-    components:               
-      - dochub                
-      - adruser
-docs:
-  dochub.welcome:
-    type: Markdown
-    source: ./src/README.md
-technologies:
-  sections:
-    services:
-      title: Сервисы
-  items:
-    dochub:
-      aliases: 
-        - arc42hub
-      section: services
-      status: adopt
+- src/getting-started/dochub.yaml
