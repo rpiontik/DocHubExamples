@@ -1,3 +1,4 @@
+
 aspects:
   learning:
     title: Обучение на примерах
@@ -27,8 +28,9 @@ contexts:
       - adruser
 docs:
   dochub.welcome:
-    type: Markdown
-    source: ./src/README.md
+    type: markdown
+    location: Главная
+    source: WELCOME.md
 technologies:
   sections:
     services:
