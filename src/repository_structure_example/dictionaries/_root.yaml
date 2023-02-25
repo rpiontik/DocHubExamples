@@ -1,0 +1,3 @@
+imports:
+  - dictionaries_model.yaml
+  - dictionaries.yaml

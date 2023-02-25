@@ -1,0 +1,10 @@
+imports:
+  - business_arch/_root.yaml
+  - information_arch/_root.yaml
+  - application_arch/_root.yaml
+  - tech_arch/_root.yaml
+  - artefacts/_root.yaml
+  - dictionaries/_root.yaml
+  - enterprise_arch/_root.yaml
+  - settings/_root.yaml  
+  - standards/_root.yaml
