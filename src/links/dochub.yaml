@@ -1,0 +1,71 @@
+components:
+  systems.a:
+    entity: system
+    title: Система 1
+    links:
+      - id: systems.b
+        description: Это ссылка П1
+        direction: -->
+        title: П1
+  systems.b:
+    entity: system
+    title: Система 2
+    links:
+      - id: systems.a
+        description: Это ссылка П2
+        direction: -->
+        title: П2
+      - id: systems.a
+        description: Это ссылка П3
+        direction: -->
+        title: П3
+
+datasets:
+  arch.context:
+    source: >
+      (
+        $components := $.components;
+        $components:= $mergedeep($components.$spread().{
+            "src_id": $keys()[0],
+            "src": $.*
+        }.(
+            $exists(src.links) ? (
+            { src_id: $merge([src,
+                {
+                    "links": $append([],
+                        src.links.(
+                            $exists($.title) ? (
+                                $merge([$,
+                                    {
+                                        "title": "[[/docs/arch.tech.flows.single?flow=" & $.title & " " & $.title & "]]"
+                                    }
+                                ]);
+                            ) : (
+                                $
+                            )
+                        )
+                    )
+                }
+            ])}
+          ):(
+            { src_id : src }
+          )
+        ));
+        $merge([$, {"components": $mergedeep([$components, $links])}]);
+      )
+contexts:
+  example:
+    title: Пример ссылок
+    location: Пример ссылок
+    extra-links: true
+    source: arch.context
+    components:
+      - systems.*
+docs:
+  arch.tech.flows.single:
+    type: markdown
+    template: single.md
+    source: >
+      (
+        $.components.*.links[title=$params.flow]
+      )
