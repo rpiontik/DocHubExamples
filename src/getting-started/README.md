@@ -170,25 +170,96 @@ contexts:
       - *.systems.accounting.*
 ```
 
-Теперь у нас есть архитектура http://localhost:8080/architect/components/enterprise (не забудьте снова сделать деплой и коммит)
+и не забудем импортировать в наш корневой файл [./src/root.yaml](./src/root.yaml) наши контексты представления
+
+```
+imports:
+- contexts/root.yaml
+```
+
+Теперь у нас есть архитектура http://localhost:8080/architect/components/enterprise (не забудьте снова сделать локальный деплой и коммит)
 
 ## Из чего эта штука состоит
 
 Это круто что у нас есть архитектура, но нам нужно явно указать какие у нас там технологии. И это товарищи ваш первый внутренний "холивар" - как их категоризировать, НО - раз мы кодируем то давайте создадим файл
 
-**Шаг 4**: Подключим технологии уже из внешнего файла.
+**Шаг 4**: Подключим технологии уже из внешнего файла
 
 * [./src/techstack/root.yaml](./src/techstack/root.yaml)
 
-А из чего состоят наши компоненты ? Что за технолоческий набор (стэк) технологий мы используем. И тут рекомендуется сделать просто - прописать те технологии которые мы знаем. Создадим их:
+А из чего состоят наши компоненты ? Что за технологический набор (стэк) технологий мы используем. И тут рекомендуется сделать просто - прописать те технологии которые мы знаем. Создадим их:
 
 ```
 technologies:
   sections:
-...
-  items:
-...
+    user.clients:
+      title: Клиенты доступа
+    lowcode.platforms:
+      title: Платформы конструкторы пользовательских приложений
+    databases.platforms:
+      title: Платформы для построения СУБД
+  items:    
+    framework.electron:
+      title: Electron
+      section: user.clients
+      status: trial
+    platform.corteza:
+      title: platform.corteza
+      section: lowcode.platforms
+      status: assess
+    postgres.zombodb:
+      title: ZomboDB
+      section: databases.platforms
+      status: adopt
 ```
+
+Не забудем импортировать файл с нашим стэком в главный файл-манифест архитектуры
+
+```
+imports:
+- techstack/root.yaml
+```
+
+И конечно укажем **технологии для наших компонентов**
+
+* framework.electron - `Клиентское окно сотрудника бухгалтерии`
+* platform.corteza - `Серверная логика системы бухгалтерского учета`
+* postgres.zombodb - `Хранилище данных (СУБД) бухгалтерского учета`
+
+В итоге наш корневой файл
+
+`cat src/root.yaml`
+
+будет выглядеть следующим образом
+
+```
+imports:
+- contexts/root.yaml
+- techstack/root.yaml
+
+components:
+  enterprise: # Корневой компонент (домен)
+    title: Холдинг "Замечательный"
+  enterprise.systems:
+    title: Системы учета хозяйственных операций
+  enterprise.systems.accounting: 
+    title: Бухгалтерия предприятия
+  enterprise.systems.accounting.standaloneclient:
+    title: Клиентское окно сотрудника бухгалтерии
+    technologies:
+    - framework.electron
+  enterprise.systems.accounting.backendlogic:
+    title: Серверная логика системы бухгалтерского учета
+    technologies:
+    - platform.corteza
+  enterprise.systems.accounting.database:
+    title: Хранилище данных (СУБД) бухгалтерского учета
+    technologies: 
+    - postgres.zombodb
+
+```
+
+Как вы видите - у нас уже есть **Компоненты, Контексты и Технологии** и все они с идентификаторами и заголовками (Не забудьте снова сделать локальный деплой и коммит)
 
 
 ## Аспектно, контекстно, документно ориентированное программирование

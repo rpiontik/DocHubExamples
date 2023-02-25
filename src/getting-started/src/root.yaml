@@ -1,7 +1,12 @@
+imports:
+- contexts/root.yaml
+- techstack/root.yaml
+
 docs:
   dochub.welcome:
     type: Markdown
     source: ./README.md
+    location: Главная
 
 components:
   enterprise: # Корневой компонент (домен)
@@ -12,7 +17,13 @@ components:
     title: Бухгалтерия предприятия
   enterprise.systems.accounting.standaloneclient:
     title: Клиентское окно сотрудника бухгалтерии
+    technologies:
+    - framework.electron
   enterprise.systems.accounting.backendlogic:
     title: Серверная логика системы бухгалтерского учета
+    technologies:
+    - platform.corteza
   enterprise.systems.accounting.database:
-    title: Хранилище данных (СУБД) бухгалтерского учета  
+    title: Хранилище данных (СУБД) бухгалтерского учета
+    technologies: 
+    - postgres.zombodb

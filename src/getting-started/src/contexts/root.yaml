@@ -3,4 +3,9 @@ contexts:
     title: Все наши системы 
     location: Верхнеуровневый прикладной ландшафт/Холдинг Замечательный
     components:
-      - enterprise.systems.*
+      - "enterprise.systems.*"
+  arch.accounting.systems:
+    title: Все наши системы 
+    location: Системный ландшафт/Бухгалтерские системы
+    components:
+      - "*.systems.accounting.*"
