@@ -1,0 +1,92 @@
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+allow_mixing
+
+'Общее позиционирование
+skinparam {
+  wrapWidth 200
+  maxMessageSize 200
+  'hide stereotype
+  defaultfontname arial
+  roundCorner 10
+  linetype ortho
+  'linetype polyline
+  'nodesep 100
+  'ranksep 100
+  shadowing false
+  'padding 0
+    hyperlinkColor black
+    hyperlinkUnderline false
+}
+'left to right direction
+hide circle
+
+
+'Стиль стрелки
+skinparam arrow {
+  color black
+  thickness 1
+}
+
+skinparam note {
+bordercolor #4e4948
+backgroundcolor pink
+}
+
+!unquoted procedure $Region($alias, $label, $type)
+    !if ($type)
+        Boundary($alias , "$label",  $type)
+    !else
+        Boundary($alias , "$label")
+    !endif
+!endprocedure
+
+!unquoted procedure $Header($Title="Header", $Authors="Name", $Version="0.1", $Date="01.01.1999")
+    header
+        !if ($Authors)
+            Authors: $Authors
+        !endif
+        !if ($Version)
+            Version: $Version
+        !endif
+        !if ($Date)
+            Date: $Date
+        !endif
+
+    endheader
+
+    hide empty members
+
+    title $Title
+!endprocedure
+
+!unquoted procedure $Entity($entity, $ACName, $id, $ACType)
+    !if ($entity == "database")
+        !if ($ACType == "Внешняя")
+            SystemDb_Ext($id, $ACName)
+        !else
+            SystemDb($id, $ACName)
+        !endif
+    !elseif ($entity == "actor" || $entity == "person")
+        !if ($ACType == "Внешняя")
+            Person_Ext($id, $ACName)
+        !else
+            Person($id, $ACName)
+        !endif
+    !else
+        !if ($ACType == "Внешняя")
+            System_Ext($id, $ACName)
+        !else
+            System($id, $ACName)
+        !endif
+    !endif
+!endprocedure
+
+!unquoted procedure $EntityEnd($entity)
+!endprocedure
+
+!unquoted procedure $EntityAspect($entity, $prop)
+!endprocedure
+
+!unquoted procedure $EntityExpand($entity, $ID)
+!endprocedure
