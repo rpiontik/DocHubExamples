@@ -1,0 +1,9 @@
+docs:
+  # Заглушка пока нет описсания по бизнес архитектуре
+  swamp.information_arch:    
+    location: 03. Информационная архитектура
+    description: Описание информационной архитектурой
+    type: markdown
+    template: information_arch.md
+    
+

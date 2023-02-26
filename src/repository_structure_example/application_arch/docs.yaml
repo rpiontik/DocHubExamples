@@ -1,0 +1,9 @@
+docs:
+  # Заглушка пока нет описсания по бизнес архитектуре
+  swamp.application_arch:    
+    location: 04. Прикладная архитектура
+    description: Описание информационной архитектурой
+    type: markdown
+    template: application_arch.md
+    
+

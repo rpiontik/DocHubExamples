@@ -1,4 +1,5 @@
 imports:    
   - systems/_root.yaml
   - docs.yaml
+  - functions.yaml
   
