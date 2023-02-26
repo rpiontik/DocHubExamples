@@ -1,0 +1,21 @@
+technologies:
+  sections:
+    user.clients:
+      title: Клиенты доступа
+    lowcode.platforms:
+      title: Платформы конструкторы пользовательских приложений
+    databases.platforms:
+      title: Платформы для построения СУБД
+  items:    
+    framework.electron:
+      title: Electron
+      section: user.clients
+      status: trial
+    platform.corteza:
+      title: platform.corteza
+      section: lowcode.platforms
+      status: assess
+    postgres.zombodb:
+      title: ZomboDB
+      section: databases.platforms
+      status: adopt

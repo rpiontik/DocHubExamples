@@ -1,0 +1,29 @@
+imports:
+- contexts/root.yaml
+- techstack/root.yaml
+
+docs:
+  dochub.welcome:
+    type: Markdown
+    source: ./README.md
+    location: Главная
+
+components:
+  enterprise: # Корневой компонент (домен)
+    title: Холдинг "Замечательный"
+  enterprise.systems:
+    title: Системы учета хозяйственных операций
+  enterprise.systems.accounting: 
+    title: Бухгалтерия предприятия
+  enterprise.systems.accounting.standaloneclient:
+    title: Клиентское окно сотрудника бухгалтерии
+    technologies:
+    - framework.electron
+  enterprise.systems.accounting.backendlogic:
+    title: Серверная логика системы бухгалтерского учета
+    technologies:
+    - platform.corteza
+  enterprise.systems.accounting.database:
+    title: Хранилище данных (СУБД) бухгалтерского учета
+    technologies: 
+    - postgres.zombodb
