@@ -1,0 +1,230 @@
+datasets:
+  arch.levels.l1:
+    source: >
+      (
+                $components := $.components;
+                $links:= $components.$spread().{
+                    "src_id": $keys()[0],
+                    "src": $.*
+                }[$exists($lookup({"system":{}, "actor": {}, "database": {}}, src.entity))].(
+                    $src_id:= src_id;
+                    src.links.({
+                      "src": $src_id,
+                      "dst": $.id,
+                      "direction": $.direction,
+                      "title": $.title
+                    })
+                );
+
+                $srcs := $distinct($links.(
+                  $.src
+                ));
+                $links := $srcs.(
+                  $src_id := $;
+                  $dsts := $distinct($links[src=$src_id].(dst));
+                  $dsts.(
+                      $dst_id := $;
+                      $titles := $append([], $links[src=$src_id and dst=$dst_id].(
+                          $.title
+                      ));
+                      {
+                          "src": $src_id,
+                          "dst": $dst_id,
+                          "title": $titles,
+                          "direction": ($links[src=$src_id and dst=$dst_id and (direction = "<->" or direction = "<--")] ? "<" : "-") &
+                                       "-" &
+                                      ($links[src=$src_id and dst=$dst_id and (direction = "<->" or direction = "-->")] ? ">" : "-")
+                      } 
+                  )   
+                );
+                $map:= $mergedeep($links.({
+                  $.src & "#" & $.dst : $
+                }));
+                $dublicates:= $distinct($map.$spread().{
+                  "link": $.*
+                }.(
+                  $exists($lookup($map, link.dst & "#" & link.src)) ? ($join($sort([link.src, link.dst]),"#"))
+                ));
+                $links := $links.(
+                  $.src & "#" & $.dst in $dublicates ? (
+                      $remote := $lookup($map,  $.dst & "#" & $.src);
+                      $titles := $append($.title, $remote.title);
+                      {
+                          "src": $.src,
+                          "dst": $.dst,
+                          "title": $count($titles) > 1 ? (
+                                              "[[/docs/arch.tech.flows.group?flow=" & $join($titles, ",") & " #]]"
+                                          ):(
+                                              "[[/docs/arch.tech.flows.single?flow=" & $titles[0] & " " & $titles[0] & "]]"
+                                          ),
+                          "direction": (($remote.direction = "<->" or $remote.direction = "-->" or $.direction = "<->" or $.direction = "<--") ? "<" : "-") &
+                                        "-" &
+                                        (($remote.direction = "<->" or $remote.direction = "<--" or $.direction = "<->" or $.direction = "-->") ? ">" : "-")
+                  }) : (
+                      $not($.dst & "#" & $.src in $dublicates) ? (
+                          $merge ([$, 
+                          {
+                              "title": $count($.title) > 1 ? (
+                                          "[[/docs/arch.tech.flows.group?flow=" & $join($.title, ",") & " #]]"
+                                        ):(
+                                          "[[/docs/arch.tech.flows.single?flow=" & $.title[0] & " " & $.title[0] & "]]"
+                                        )
+                          }
+                          ]);
+                      )
+                  )
+                );
+                $components := $mergedeep($components.$spread().{
+                    "src_id": $keys()[0],
+                    "src": $.*
+                }.(
+                  $exists($lookup({"system":{}, "actor": {}, "database": {}}, src.entity)) and $exists(src.links) ? (
+                      { src_id: $merge([src, { "links" : []}])}
+                  ):(
+                      { src_id: src}
+                  )
+                ));
+                $srcs := $distinct($links.(
+                  $.src
+                ));
+                $links := $mergedeep($srcs.(
+                  $id := $;
+                  {
+                      $id : {
+                          "links": $append([],$links[src = $id].(
+                                  {
+                                      "id": $.dst,
+                                      "title": $.title,
+                                      "direction": $.direction
+                                  }
+                            ))
+                      }
+                  }
+                ));
+                $merge([$, {"components": $mergedeep([$components, $links])}]);
+
+      )
+  arch.tech.flows:
+    source: >
+      (
+                $components:= $.components;
+                $.components.$spread().{
+                        "id": $keys()[0],
+                        "component": $.*
+                    }[$exists($lookup({"system": {}, "actor": {}, "database": {}}, component.entity))].(
+                        $source:= component.title;
+                        $exists(component.links) ? (
+                            component.links.(
+                            {
+                                "source": $source,
+                                "destination": $lookup($components, $.id).title,
+                                "title": $.title,
+                                "description": $.description,
+                                "direction" : $.direction
+                            })
+                        )
+                    )
+      )
+components:
+  systems.a:
+    entity: system
+    title: Система 1
+    links:
+      - id: systems.b
+        description: Это ссылка П1
+        direction: -->
+        title: П1
+      - id: systems.b
+        description: Это ссылка П3
+        direction: -->
+        title: П3
+      - id: systems.b
+        description: Это ссылка П4
+        direction: <--
+        title: П4
+  systems.b:
+    entity: system
+    title: Система 2
+    links:
+      - id: systems.a
+        description: Это ссылка П2
+        direction: -->
+        title: П2
+      - id: systems.a
+        description: Это ссылка П5
+        direction: -->
+        title: П5
+      - id: systems.c
+        description: Это ссылка П6
+        direction: -->
+        title: П6
+  systems.c:
+    entity: system
+    title: Система 3
+    links:
+      - id: systems.a
+        description: Это ссылка П7
+        direction: -->
+        title: П7
+      - id: systems.d
+        description: Это ссылка П9
+        direction: -->
+        title: П9
+  systems.d:
+    entity: system
+    title: Система 4
+    links:
+      - id: systems.c
+        description: Это ссылка П8
+        direction: <->
+        title: П8
+contexts:
+  example:
+    title: L1
+    location: L1
+    extra-links: true
+    source: arch.levels.l1
+    components:
+      - systems.*
+docs:
+  arch.tech.flows.single:
+    type: markdown
+    template: single.md
+    source: >
+      (
+        $.components.*.links[title=$params.flow]
+      )
+
+  arch.tech.flows.group:
+    type: table
+    headers:
+      - value: title
+        text: Название потока
+        sortable: true
+        link: link
+        align: left
+      - value: description
+        text: Описание
+        align: left
+      - value: source
+        text: Система источник
+        align: left
+        sortable: true
+      - value: destination
+        text: Система приемник
+        align: left
+        sortable: true
+      - value: direction
+        text: Направление
+        align: left
+        sortable: true
+    origin: arch.tech.flows
+    source: >
+      (
+          $[title in $split($params.flow, ",")].(
+              $merge([$, {
+                "link": "/docs/arch.tech.flows.single?flow="&$.title}]
+              )
+          )
+      )
+
