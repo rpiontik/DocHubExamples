@@ -19,11 +19,29 @@ components:
     title: Клиентское окно сотрудника бухгалтерии
     technologies:
     - framework.electron
+    aspects:
+    - accounting.business-transactions 
   enterprise.systems.accounting.backendlogic:
     title: Серверная логика системы бухгалтерского учета
     technologies:
     - platform.corteza
+    aspects:
+    - accounting.balanse
   enterprise.systems.accounting.database:
     title: Хранилище данных (СУБД) бухгалтерского учета
     technologies: 
     - postgres.zombodb
+    aspects:
+    - accounting.business-transactions
+    - accounting.balanse
+
+aspects:
+  accounting.business-transactions:
+    title: Учет хозяйственных операций    
+    location: Бухгалтериский учет/Первичка
+  accounting.balanse:
+    title: Расчет бухгалтерского баланса предприятия
+    location: Бухгалтериский учет/Алгоритмы
+  c:
+    title: Хранение бухгалтерских данных
+    location: Бухгалтериский учет/Данные
