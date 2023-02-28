@@ -327,3 +327,4 @@ functions:
     $eval($functions.get_resources,{"context": {"ram": 2, "cpu_type": "standart", "cpu": 8, "storage_type": "standart", "storage_size": 5}, "mult": 1, "output_type": "full"});
 )
   ```
+Также нужно учитывать, что блок кода описанный выше работает только с переданным контекстом и если вам нужно будет получить что-то типа `$.components`, то это нужно делать при помощи переданных параметров `$components := $.components`.
