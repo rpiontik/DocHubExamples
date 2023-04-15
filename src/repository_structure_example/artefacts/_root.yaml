@@ -1,1 +1,3 @@
-imports:  
+imports:
+  - common/_root.yaml
+  - frog_paradise/_root.yaml
