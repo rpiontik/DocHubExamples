@@ -24,8 +24,8 @@ components:
       direction: <--
     - id: swamp.crocodile.crm
       direction: <--
-    - id: swamp.crocodile.spact
-      direction: <--
+    # - id: swamp.crocodile.spact
+    #   direction: <--
 
 
 

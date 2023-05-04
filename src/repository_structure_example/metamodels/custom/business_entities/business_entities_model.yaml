@@ -10,12 +10,12 @@ entities: # Сущности расширенной метамодели
           {
             "icon": *.icon,
             "link": "entities/business_entities/business_entities_list",
-            "location": "Документы/03. Информационная архитектура/01. Бизнес-сущности"
+            "location": "03. Информационная архитектура/01. Бизнес-сущности"
           },
           {
             "icon": *.icon,
             "link": "entities/business_entities/business_entities_in_systems",
-            "location": "Документы/03. Информационная архитектура/02. Список бизнес-сущностей в системах"
+            "location": "03. Информационная архитектура/02. Список бизнес-сущностей в системах"
           }
         ]
       )

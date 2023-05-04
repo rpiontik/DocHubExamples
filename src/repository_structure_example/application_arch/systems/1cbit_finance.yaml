@@ -11,8 +11,8 @@ components:
     system_category: business_app #channel_app/business_app/ext_business_app/it_app/ext_it_app          
     links:
       # Cвязи с системами
-      - id: swamp.crocodile.spact
-        direction: <--
+      # - id: swamp.crocodile.spact
+      #   direction: <--
       - id: swamp.frog.spoll
         direction: <--
       - id: swamp.crocodile.crm

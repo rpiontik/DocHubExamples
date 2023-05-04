@@ -15,3 +15,20 @@ docs:
     type: markdown
     source: useful_links/useful_links.md
 
+
+  plugins.frog:
+    location: 09. Документация/Плагины/1. Мой плагин
+    type: test
+    params:
+      param1: Значение параметра 1
+      param2: Значение параметра 2
+  
+    source: examples/test.md"
+
+  dochub.plugins.example:
+    location: 09. Документация/Плагины/2. Пример Ромы
+    type: html
+    headers:
+      head1:
+        type: test
+    source: examples/example.html
