@@ -50,7 +50,7 @@ entities:
                           & "[[/architect/components/" & $domain & " " & $component.title & "]]"
                           & "\", " 
                           & $domain
-                          & ", )\n";
+                          & ", ,"& ($exists($component.color) ? ("#" & $component.color) : ("")) &")\n";
         
                       /* Добавляем аспекты */
                       $result := $result & $join($component.aspects.(

@@ -20,7 +20,6 @@ components:
       - Redis
       - Kafka
       - Nginx
-    links:
-      # Интеграции между системами одного БЮ
+    links:      
       - id: swamp.crocodile
         direction: <--

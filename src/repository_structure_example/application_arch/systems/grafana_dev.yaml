@@ -19,5 +19,6 @@ components:
         direction: <--
       - id: swamp.crocodile.crm
         direction: <--
+    color: Red
 
         
