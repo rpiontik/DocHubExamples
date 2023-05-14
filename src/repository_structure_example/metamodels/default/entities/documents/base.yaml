@@ -7,7 +7,7 @@ entities:
         $append([
             {
               "title": 'Документы',
-              "location": 'Документы',
+              /*"location": 'Документы',*/
               "expand": true,
               "icon": 'description'
             }

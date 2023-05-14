@@ -1,10 +1,6 @@
 components:
   # внутренние клиенты Экосистемы
 
-  swamp.frog:
-    title: Лягушка
-    entity: person
-
   swamp.creeping_snake:
     title: Змей-ползучий
     entity: person   # Сущность компонента из PlantUML (https://plantuml.com/ru/deployment-diagram)

@@ -22,13 +22,14 @@ entities:
           $join($map($areas, function($domain, $index) {(
               $result := "";
               $component := $lookup($components, $domain);
+              $originComponent := $lookup($manifest.components, $domain);
               $context := $lookup($manifest.contexts, $domain);
         
               /* Определяем является ли элемент областью */
               $isAreaBegin := $areas[$index + 1].$substring(0, $domain.$length() + 1) = $domain & ".";
         
               $result := $result & ($isAreaBegin ? (
-                  $title := $component.title ? $component.title : (
+                  $title := $originComponent.title ? $originComponent.title : (
                       $context.title ? $context.title : $domain
                   );
                       "$Region("
@@ -124,7 +125,7 @@ entities:
             };
 
             /* Если явно указан puml файл, просто рендерим его */
-            $substring($context.uml, -5) = ".puml" ? (
+            ($type($context.uml) = "string") and ($substring($context.uml, -5) = ".puml") ? (
                 {
                   "type": "plantuml",
                   "source": $toDirectRes($context.uml)
@@ -141,7 +142,6 @@ entities:
             )
           )
         template: templates/template.puml
-        # template: templates/context.puml
         source: >
           (
             $id := $params."dh-context-id";
@@ -167,7 +167,7 @@ entities:
             }, $defConfig.renderCore);
 
             /* Формируем заголовок */
-            $header := "$Header(\"" & ($context.title ? $context.title : $id ) & "\", , , )\n";
+            $header := "$Header(\"" & ($context.title ? $context.title : $id ) & "\", \"" & $context.uml."$autor" & "\", \"" & $context.uml."$version" & "\" , \"" & $context.uml."$moment" & "\")\n";
 
             /* Получаем все компоненты входящие в контекст */
             $components := $eval($defFunctions.fetchComponents, {

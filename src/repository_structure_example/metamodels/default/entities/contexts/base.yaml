@@ -113,6 +113,9 @@ entities:
           /* Обрабатываем параметры */
           $params := $;
           $manifest := $params.manifest;
+          /* Признак SELF контекста */
+          $isSelf := $params.componentId ? true : false;
+          /* Получаем объект контекста */
           $context := $lookup($params.manifest.contexts, contextId);
 
           /* Определяем необходимость показывать ближайшие связи */
@@ -134,7 +137,7 @@ entities:
                 $mask := $;
                 $manifest.components.$spread().(
                     $componentId := $keys()[0];
-                    $wcard($componentId, $mask) ? $
+                    $result := $wcard($componentId, $mask) ? $
                 )
             ));
           
@@ -142,7 +145,9 @@ entities:
             $merge([$components, $isExtraLinks ? (
                 $components.*.links.(
                     {
-                        id: $lookup($manifest.components, id)
+                        id: $isSelf 
+                          ? $merge([$lookup($manifest.components, id), { "links": [] }])
+                          : $lookup($manifest.components, id)
                     }
                 );
             ) : {}]);

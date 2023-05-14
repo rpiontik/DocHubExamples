@@ -4,13 +4,12 @@ contexts:   # Контексты представления архитектур
     location: ГК Болото
     extra-links: true
     # extra-links: false
-    # uml:
-    #   $notation: plantuml  # sber C4Model plantuml
-    #   $autor: Frog
-    #   $version: '0.0.1'
-    #   $moment: 20.11.2022
+    uml:
+      $notation: plantuml  # sber C4Model plantuml
+      $autor: Frog
+      $version: '0.0.1'
+      $moment: 20.11.2022
     components:
       - swamp.frog.*
       - swamp.hippo.*
-      - swamp.crocodile.*
-      - swamp.crocodile.sid
+      - swamp.crocodile.*      
