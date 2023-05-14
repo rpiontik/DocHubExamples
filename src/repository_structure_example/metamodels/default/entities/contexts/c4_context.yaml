@@ -28,7 +28,7 @@ entities:
           required:
             - dh-context-id
         type: plantuml
-        template: templates/context.puml
+        
         $constructor: >  # Переносим необходимую информацию из контекста в презентацию 
           (
             $id := $params."dh-context-id";
@@ -41,7 +41,7 @@ entities:
             };
 
             /* Если явно указан puml файл, просто рендерим его */
-            $substring($context.uml, -5) = ".puml" ? (
+            ($type($context.uml) = "string") and ($substring($context.uml, -5) = ".puml") ? (
                 {
                   "type": "plantuml",
                   "source": $toDirectRes($context.uml)
@@ -57,6 +57,7 @@ entities:
                     : $result;
             )
           )
+        template: templates/context.puml
         source: >
           (
             $id := $params."dh-context-id";

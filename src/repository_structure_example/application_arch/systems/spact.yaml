@@ -23,4 +23,4 @@ components:
       # Интеграции между системами одного БЮ
       - id: swamp.frog.1cbit_finance
         direction: <--
-    color: Yellow      
+    color: Yellow

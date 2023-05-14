@@ -99,7 +99,7 @@ entities:
     # Предопределенные конфигурационные параметры для генерации контекстов
     config:
       # Идентификатор презентации по умолчанию
-      defaultPresentation: plantuml # plantuml / smartants / c4_context
+      defaultPresentation: c4_context # plantuml / smartants / c4_context
     # Общие API функции для генерирования контекста
     api:
       # Возввращает компоненты входящие в контекст

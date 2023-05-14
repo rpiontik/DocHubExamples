@@ -1,5 +1,3 @@
 imports:  
-  - functions/_root.yaml
   - entities/_root.yaml
-  - rules/_root.yaml
-  # - samples/_root.yaml  
+  - rules/_root.yaml  
