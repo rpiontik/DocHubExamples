@@ -1,10 +1,4 @@
 docs:
-  arch_introduction:
-    location: 01. Архитектурные принципы и стандарты/01. Введение в архитектуру
-    description: Введение
-    type: markdown
-    source: introduction.md
-
   arch_principles:
     location: 01. Архитектурные принципы и стандарты/02. Архитектурные принципы
     description: Архитектурные принципы

@@ -1,6 +1,0 @@
-imports:
-  - forms.yaml
-  - validators/_root.yaml
-  - datasets/_root.yaml
-  - components_extension.yaml
-  - jsonata/_root.yaml
