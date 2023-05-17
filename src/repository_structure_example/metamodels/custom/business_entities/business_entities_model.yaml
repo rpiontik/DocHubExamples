@@ -22,6 +22,8 @@ entities: # Сущности расширенной метамодели
     presentations:
       business_entities_table_list:
         type: table
+        title: Таблица бизнес-сущностей
+
         headers:
           - value: title
             text: Бизнес-сущность
@@ -44,11 +46,20 @@ entities: # Сущности расширенной метамодели
       # Выводим список бизнес-сущностей полученных в запросе выше business_entities_list
       business_entities_list:
         type: markdown
+        title: Таблица бизнес-сущностей в md
         template: templates/business_entities_list.md
 
       # Выводим карточку выбранной бизнес-сущности
       business_entity_card:
         type: markdown
+        title: Карточка бизнес-сущности
+        params:
+          type: object
+          properties:
+            id:
+              type: string
+          required:
+            - id    
         template: templates/business_entity_card.md
         source: >            
           (
@@ -59,6 +70,7 @@ entities: # Сущности расширенной метамодели
       # Получаем список бизнес-сущностей используемых в системах, все это выводим в таблицу
       business_entities_table_in_systems:
         type: table
+        title: Таблица бизнес-сущностей используемых в системах
         headers:
           - value: system_title
             text: Система
@@ -88,11 +100,20 @@ entities: # Сущности расширенной метамодели
       # Выводим писок бизнес-сущностей используемых в системах полученных в запросе выше business_entities.in_systems
       business_entities_in_systems:
         type: markdown
+        title: Таблица бизнес-сущностей используемых в системах в md
         template: templates/business_entities_in_systems.md
 
       # Наследуемся от таблицы business_entities.in_systems и делаем фильтр по конкретной системе
       business_entities_table_in_systems.filtered:     # Дочерняя таблица
         type: table
+        title: Таблица бизнес-сущностей используемых в системах с фильтром
+        params:
+          type: object
+          properties:
+            system_id:
+              type: string
+          required:
+            - system_id
         headers: 
           - value: system_title
             text: Система
@@ -117,3 +138,20 @@ entities: # Сущности расширенной метамодели
               $[system_id=$params.system_id]
           )
 
+      # http://localhost:3030/entities/business_entities/presentations/get_business_entities
+      get_business_entities:
+          type: upload
+          title: Выгрузка бизнес-сущностей в JSON
+          # template: templates/temporary.json
+          # params:           # JSONSchema контроля параметров
+          #   type: object
+          #   properties:
+          #     gitlab_id:
+          #       type: string
+          #   required:
+          #     - gitlab_id        
+          origin: swamp.dataset.business_entities_in_systems       # Базовый источник данных
+          source: >
+            (
+                $[system_id="swamp.crocodile.crm"]
+            )
