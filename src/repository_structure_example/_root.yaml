@@ -1,6 +1,6 @@
 imports:  
   - application_arch/_root.yaml
-  - artefacts/_root.yaml
+  - artifacts/_root.yaml
   - business_arch/_root.yaml
   - dictionaries/_root.yaml
   - documentation/_root.yaml

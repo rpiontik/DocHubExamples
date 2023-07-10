@@ -1,7 +1,7 @@
 contexts:   # Контексты представления архитектурных компонентов
   arch.swamp.common:
     title: ГК Болото
-    location: ГК Болото
+    location: 03. Верхнеуровневый прикладной ландшафт (ПА-L1)/ГК Болото
     extra-links: true
     # extra-links: false
     uml:

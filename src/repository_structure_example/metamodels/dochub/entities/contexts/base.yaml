@@ -79,27 +79,19 @@ entities:
     menu: >
       (
         $presentation := entities.contexts.config.defaultPresentation;
-        $append([
-            {
-                "title": "Контексты",
-                "location": '04. Прикладная архитектура/03. Верхнеуровневый прикладной ландшафт (ПА-L1)',
-                "icon": 'location_searching'
+        contexts.$spread().(
+            /* Если указана явно презентация, используем ее */
+            $presentation := $.*.presentation ? *.presentation : $presentation;
+            *.location ? {
+                "location": "04. Прикладная архитектура/" & *.location,
+                "link": "entities/contexts/" & $presentation & "?dh-context-id=" & $keys()[0]
             }
-          ],
-          contexts.$spread().(
-              /* Если указана явно презентация, используем ее */
-              $presentation := $.*.presentation ? *.presentation : $presentation;
-              *.location ? {
-                  "location": "04. Прикладная архитектура/03. Верхнеуровневый прикладной ландшафт (ПА-L1)/" & *.location,
-                  "link": "entities/contexts/" & $presentation & "?dh-context-id=" & $keys()[0]
-              }
-          )
         );
       )
     # Предопределенные конфигурационные параметры для генерации контекстов
     config:
       # Идентификатор презентации по умолчанию
-      defaultPresentation: c4_context # plantuml / smartants / c4_context
+      defaultPresentation: plantuml # plantuml / smartants / c4_context
     # Общие API функции для генерирования контекста
     api:
       # Возввращает компоненты входящие в контекст

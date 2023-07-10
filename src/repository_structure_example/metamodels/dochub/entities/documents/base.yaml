@@ -4,20 +4,11 @@ entities:
     # Строим меню по объектам документа
     menu: >
       (
-        $append([
-            {
-              "title": 'Документы',
-              /*"location": 'Документы',*/
-              "expand": true,
-              "icon": 'description'
+        docs.$spread().(
+            *.location ? {
+                "location": *.location,
+                "link": "entities/docs/blank?dh-doc-id=" & $keys()[0]
             }
-          ],
-          docs.$spread().(
-              *.location ? {
-                  "location": *.location,
-                  "link": "entities/docs/blank?dh-doc-id=" & $keys()[0]
-              }
-          )
         )
       )
     # Схема данных объекта "Документ"
