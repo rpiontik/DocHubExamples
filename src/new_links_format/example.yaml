@@ -1,0 +1,143 @@
+links:
+  front.app-orders.backend:
+    from: front.app
+    to: orders.backend
+    via:
+      - orders.gateway
+    title: Передача заказа
+
+  front.web-orders.backend:
+    from: front.web
+    to: orders.backend
+    via:
+      - orders.gateway
+    title: Передача заказа
+
+  front.app-auth.backend:
+    from: front.app
+    to: auth.backend
+    via:
+      - auth.gateway
+    title: Авторизация
+
+  front.web-auth.backend:
+    from: front.web
+    to: auth.backend
+    via:
+      - auth.gateway
+    title: Авторизация
+
+  orders.backend-payments.backend:
+    from: orders.backend
+    to: payments.backend
+    via:
+      - payments.gateway
+    title: Оплата
+  payments.backend-payments.db:
+    from: payments.backend
+    to: payments.db
+
+  orders.backend-orders.db:
+    from: orders.backend
+    to: orders.db
+
+  orders.backend-auth.backend:
+    from: orders.backend
+    to: auth.backend
+    title: Авторизация
+    contract: notfounddocument
+
+  auth.backend-auth.db:
+    from: auth.backend
+    to: auth.db
+
+components:
+  # Описываем L2
+
+  # **************************************
+  #      Платежный шлюз (payments)
+  # **************************************
+  # Здесь даем общую информацию о системе.
+  # Детали будем собирать автоматически из L2
+  payments:
+    title: Платежи
+    entity: component
+
+  # Подробно описываем L2
+  payments.gateway:
+    title: Шлюз
+    entity: component
+  payments.backend:
+    title: Микросервис оплаты
+    entity: component
+    links:
+      - id: payments.db
+  payments.db:
+    title: База платежей
+    entity: database
+
+  # **************************************
+  #      Подсистема заказов (orders)
+  # **************************************
+  # Аналогично, даем общую информацию
+  orders:
+    title: Заказы
+    entity: component
+
+  # Подробно описываем L2
+  orders.gateway:
+    title: Шлюз
+    entity: component
+  orders.backend:
+    title: Микросервис заказов
+    entity: component
+  orders.db:
+    title: База заказов
+    entity: database
+
+  # **************************************
+  #      Подсистема авторизации (auth)
+  # **************************************
+  auth:
+    title: Авторизация
+    entity: component
+  auth.gateway:
+    title: Шлюз
+    entity: component
+  auth.backend:
+    title: Микросервис авторизации
+    entity: component
+  auth.db:
+    title: База пользователей
+    entity: database
+
+  # **************************************
+  #      Фронтэнд (front)
+  # **************************************
+  # Пользовательское приложение
+  front:
+    title: Фронтальные компоненты
+    entity: component
+
+  front.web:
+    entity: component
+    title: Веб-сайт
+
+  front.app:
+    entity: component
+    title: Приложение
+
+contexts:
+  L2:
+    title: L2 уровень
+    location: L2
+    components:
+      - "*.*" # Отбираем все компоненты второго уровня
+  L1:
+    title: L1 уровень
+    location: L1
+    components:
+      - front
+      - auth
+      - orders
+      - payments

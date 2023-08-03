@@ -1,0 +1,24 @@
+datasets:
+  links:
+    source: >
+      (
+        $c := $.components;
+        [
+          $.links.$spread().(
+            $d:=*.$;
+            $contract := $d.contract ? "/entities/docs/blank?dh-doc-id=" & $d.contract : "";
+            $from := $lookup($c, $d.from);
+            $to := $lookup($c, $d.to);
+            $url := $d.title; 
+            {
+                "about": $url,
+                "from_link": "/architect/components/" & $d.from,
+                "to_link": "/architect/components/" & $d.to,
+                "from": $d.from,
+                "to": $d.to,
+                "via": $d.via,
+                "contract": $contract
+            }
+          )
+        ]
+      )
