@@ -1,1 +1,0 @@
-# [Пример развертывания DocHub](https://github.com/cu3blukekc/SwampHub)

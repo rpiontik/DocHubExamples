@@ -22,6 +22,7 @@
 9. [Пример структуры репозитория для управления архитектурой](src/repository_structure_example)
 10. [Пример формирования L1 контекста](src/l1_drilldown)
 11. [Примеры для кликабельных линков и пользовательского DSL](src/customdsl)
+12. [Пример развертывания DocHub](https://github.com/cu3blukekc/SwampHub)
 
 
 ## Разворачивание
