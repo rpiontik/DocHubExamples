@@ -1,0 +1,65 @@
+entities:
+  links:
+    menu: >
+      (
+        [{
+          "location": "Документы/Взаимодействия",
+          "link": "entities/links/mainlist"
+        }]
+      )
+    schema:
+      properties:
+        tables:
+          type: object
+          patternProperties:
+            # Определяем шаблон идентификаторов контекстов
+            ^([a-zA-Z\\_0-9]*)\.([a-zA-Z\_0-9]*).([a-zA-Z\_0-9]*)$:
+              type: object
+              properties:
+                description:
+                  type: string
+                owners:
+                  type: array
+              required:
+                - description
+                - owners
+    presentations:
+      filtered:
+        type: table
+        headers:
+          - value: about
+            text: Описание взаимодействия
+            sortable: true
+            link: contract
+          - value: from
+            text: От
+            sortable: true
+            link: from_link
+          - value: to
+            text: К
+            sortable: true
+            link: to_link
+        origin: links
+        source: > 
+          (
+            $from := $params.from != "" ? $params.from : "";
+            $to := $params.to != "" ? $params.to : "";
+            [$[$contains(from, $from) and $contains(to, $to)]]
+          )
+      mainlist:
+        type: table
+        headers:
+          - value: about
+            text: Описание взаимодействия
+            sortable: true
+            link: contract
+          - value: from
+            text: От
+            sortable: true
+            link: from_link
+          - value: to
+            text: К
+            sortable: true
+            link: to_link
+        origin: links
+        source: ($)

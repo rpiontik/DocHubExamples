@@ -1,0 +1,26 @@
+(
+    $links := $.components.$spread().(
+      $id := $keys()[0];
+      $l := *.links;
+      $l.(
+        $f := $contains(direction, "<");
+        $f ? {
+          "from": id,
+          "to": $id,
+          "title": title,
+          "contract": contract
+        } : {
+          "from": $id,
+          "to": id,
+          "title": title,
+          "contract": contract
+        }
+      )
+    );
+    $links{from & "-" & to:{
+      "from": from,
+      "to": to,
+      "title": title,
+      "contract": contract
+    }}
+)
