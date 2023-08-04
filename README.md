@@ -20,9 +20,10 @@
 7. [Управление процессом развертывания систем в кластерах](src/deployment_units_management)
 8. [Примеры запросов JSONata](src/jsonata_query_examples)
 9. [Пример структуры репозитория для управления архитектурой](src/repository_structure_example)
-10. [Пример формирования L1 контекста](src/l1_drilldown)
-11. [Примеры для кликабельных линков и пользовательского DSL](src/customdsl)
-12. [Пример развертывания DocHub](https://github.com/cu3blukekc/SwampHub)
+10. [Формирования L1 контекста](src/l1_drilldown)
+11. [Кликабельные линки и пользовательский DSL](src/customdsl)
+12. [Развертывания DocHub](https://github.com/cu3blukekc/SwampHub)
+13. [Модификации метамодели для описания связей собственном формате](src/new_links_format)
 
 
 ## Разворачивание
