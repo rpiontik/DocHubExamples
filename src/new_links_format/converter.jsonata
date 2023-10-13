@@ -17,10 +17,10 @@
         }
       )
     );
-    $links{from & "-" & to:{
+    {"links": $links{from & "-" & to:{
       "from": from,
       "to": to,
       "title": title,
       "contract": contract
-    }}
+    }}}
 )

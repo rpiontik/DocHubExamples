@@ -20,7 +20,7 @@ entities:
           $manifest := manifest;
         
           $stopBracketsCount := function($a, $b) {$a = 0 ? "}\n" : $a & "}\n"};
-          
+        
           $join($map($areas, function($domain, $index) {(
               $result := "";
               $component := $lookup($components, $domain);
@@ -158,6 +158,8 @@ entities:
             $manifest := _source ? _source : $;
           
             $isExtraLinks := $not($string($context."extra-links") = "false");
+            $groups := [$context.group.by];
+            $exceptGroups := [$context.group.except];
           
             /* Получаем коллекцию дефолтных вспомогательных функций */
             $defFunctions := $manifest.entities.contexts.api;
@@ -185,7 +187,9 @@ entities:
             $links := $eval($context.api.fetchLinks ? $context.api.fetchLinks : $defFunctions.fetchLinks, {
               "manifest": $manifest,
               "extraLinks": $isExtraLinks,
-              "components": $components
+              "components": $components,
+              "groups": $groups,
+              "exceptGroups": $exceptGroups
             });
 
             $components := $eval($defFunctions.fetchComponentsFromLinks, {
@@ -206,7 +210,6 @@ entities:
               "components": $components
             });
 
-          
             /* Генерируем код связей */
             $linksCode := $eval($defFunctions.makePumlComponentsLinks, {
               "links": $links

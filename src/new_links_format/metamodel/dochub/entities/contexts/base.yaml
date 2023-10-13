@@ -126,7 +126,7 @@ entities:
             ? [$params.componentId]
             /* Если нет берем все компоненты указанные в контексте */
             : $context.components; 
-  
+        
           /* Если в контексте переопределена функция получения компонентов, используем ее*/
           $r := $context.api.fetchComponents ? (
             $eval($context.api.fetchComponents, $params)
@@ -158,19 +158,6 @@ entities:
           ))^($);
         )
 
-      oldFormToNew: >
-        (
-            $.components.$spread().(
-                $from := $keys();
-                $l := *.$;
-                $l.links.(
-                    $f := direction = "<--" or direction = "<-" or direction = "<---" or direction = "<-----" ? id : $from;
-                    $t := $f = id ? $from : id;
-                    {"from": $f, "to":$t, "contract":$.contract, "title": $.title, "direction": "-->"}
-                )
-            )
-        )
-
       # Генерирует список отображаемых связей
       # Входящие параметры:
       #   components - список компонентов в формате fetchComponents
@@ -178,9 +165,9 @@ entities:
       #   required - список компонентов, явно добавленных в контекст
       fetchComponentsFromLinks: >
         (
-          $requiredComponents := required;
-          $components := components;
-          $links := links;
+          $requiredComponents := $.required;
+          $components := $.components;
+          $links := $.links;
           $neededComponents := $distinct($append($links.from, $links.to) ~> $append($requiredComponents.$keys()));
           $neededComponents.(
             $id := $;
@@ -189,8 +176,9 @@ entities:
               "entity": entity,
               "aspects": aspects
             }};          
-          )
+          );
         )
+      # нужно сделать правило, которые бы выводило ссылки с отствующим from или to, чтобы разбирать причины появления таких ссылок
       fetchLinks: >
         (
           $manifest := manifest;
@@ -213,7 +201,7 @@ entities:
             "title": *.title,
             "via": *.via,
             "contract": *.contract
-          };
+          }[from != ""];
 
           $c := $components.$spread().$keys().{"key":$};
 
@@ -306,14 +294,35 @@ entities:
               "contract": $contract,
               "title": $title
             }
-          )][from != to];
+          )];
+
+          $groupExternal := $.groups;
+          $except := $.exceptGroups;
+        
+          $s := $distinct($mainRes.(
+              [to, from]
+          ));
+          $grouped := $groupExternal.(
+              $e := $;
+              $s.(
+                  $r := $contains($, $e) and $not($ in $except);
+                  $r ? {"group": $e, "element":$, "is":$r}
+              )
+          );
+
+          $result := $mainRes.(
+              $data := $;
+              $from := $grouped[element = $data.from] ? $grouped[element = $data.from].group : $data.from;
+              $to := $grouped[element = $data.to] ? $grouped[element = $data.to].group : $data.to;
+              $merge([$data, {"from": $from, "to":$to}])
+          );
 
           $getMatched := function($array){(
               $v1 := ($array)[0];
               $sv1 := $split($v1, ".");
               $cnt := $count($sv1);
               $rf := $array;
-  
+        
               $rfr := $sv1#$i.(
                   $matcher := $join($split($v1, ".", $cnt-$i),".");
                   $res := $count([$filter($rf, function($v){
@@ -331,7 +340,7 @@ entities:
               $q;
           )};
 
-          $r:=$mainRes{from & "-" & to: (
+          $r:=$result{from & "-" & to: (
             $lFrom := $getMatched(realFrom);
             $lTo := $getMatched(realTo);
             $values := $count(from);
@@ -340,7 +349,7 @@ entities:
             $to := (to)[0];
             $title := $values > 1 ? (
               $r:=$domainLevel ? $split($to,".", $domainLevel) ~> $join(".") : ($services[$to in list])[0];
-              (fromServiceName)[0] & " -> " & ($lookup($components, $r).title)[0] & " (" & $cnt & ")"
+              ($lFrom != "" ? (fromServiceName)[0] : "*") & " -> " & ($lookup($components, $r).title)[0] & " (" & $cnt & ")"
             ) : title;
             {
               "from":(from)[0],
