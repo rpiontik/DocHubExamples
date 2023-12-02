@@ -1,0 +1,5 @@
+imports:
+  - base.yaml
+  - FinancialManagement/ERP.yaml
+  - DocumentManagement/DocumentFlow.yaml
+  - Technological/SPPR.yaml

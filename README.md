@@ -24,6 +24,7 @@
 11. [Примеры для кликабельных линков и пользовательского DSL](src/customdsl)
 12. [Развертывания DocHub](https://github.com/cu3blukekc/SwampHub)
 13. [Модификация метамодели для описания связей в собственном формате](src/new_links_format)
+14. [Entity Relationship диаграммы и диаграммы классов](src/entity_relationship_diagrams)
 
 ## Разворачивание
 

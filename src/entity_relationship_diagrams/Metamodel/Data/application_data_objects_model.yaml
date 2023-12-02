@@ -1,0 +1,54 @@
+entities:
+
+  ApplicationDataObjects:
+    title: Объекты данных приложений
+    description: "Объекты данных приложений"
+    presentations:
+      blank:
+        title: Основная карточка Объекты данных приложений
+        type: markdown
+        template: templates/application_data_object_card.md
+        source: >
+          (
+          
+            $Id := $params.id; 
+          
+            /* Получение из констант строку-описания карточки объкта приложения/сервиса - "/entities/ApplicationDataObjects/blank?id="  */
+            /* Необходимо для упрощения поддержки изменений */
+            $AppDataObjCard := Constants.AppDataObjCard.Default;
+
+            /* Поиск приложения/сервиса выполянется по ключу, чтобы не использовать components.$spread() + [отбор по ID], */
+            /* так как на большом объеме озера данных будут наблюдаться задржки обработки данных */ 
+            $FoundAppDataObj := $lookup(ApplicationDataObjects, $Id);
+            $FoundSystem     := $lookup(components, $FoundAppDataObj.system);
+            
+            {
+              "ID": $Id,
+              "Link": $AppDataObjCard & $Id,
+              "Title": $FoundAppDataObj.title,
+              "Description": $FoundAppDataObj.description,
+              "Type": $FoundAppDataObj.type,
+              "System_Link": Constants.ComponentCard.System & $FoundAppDataObj.system,
+              "System_Title": $FoundSystem.title
+            }
+          
+          )
+          
+
+      ListOfApplicationDataObjectsFilteredBySystemID:
+        title: Таблица объектов приложения, отфильтрованных по ID приложения/сервиса
+        type: table
+        headers:
+          - value: Title
+            text: Объект приложения/сервиса
+            sortable: true
+            link: Link
+          - value: Description
+            text: Описание
+          - value: Type
+            text: Тип/Класс
+        origin: ApplicationDataObjects.dataset.ListOfApplicationDataObjects
+        source: >
+          (
+            [$[System_Id = $params.SystemID]]
+          )
