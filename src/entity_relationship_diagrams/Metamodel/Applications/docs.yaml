@@ -1,0 +1,23 @@
+docs:
+
+  Common.doc.ApplicationsListOfInformationSystems:
+    location: "Архитектура приложений/Общий список систем и сервисов"
+    type: table
+    headers:
+      - value: Title
+        text: "Наименование"
+        sortable: true
+        link: Link
+      - value: Description
+        text: "Описание"
+      - value: State
+        text: "Статус"
+        sortable: true
+      - value: Platform
+        text: "Платформа"
+        sortable: true
+      - value: Basic_Solution
+        text: "Базовое решение"
+        sortable: true
+        link: Basic_Solution_Link
+    source: Appication.dataset.ListOfInformationSystems

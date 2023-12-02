@@ -1,0 +1,17 @@
+components:
+
+  Romashka.Systems.Technological.SPPR:
+    title: 1С:СППР
+    entity: component
+    description:
+      "Система проектирования прикладных решений (СППР) предназначена для проектирования прикладных решений (конфигураций) на платформе «1С:Предприятие» и 
+       ведения технической документации проекта. СППР может быть использована как в качестве инструмента для проектирования новых информационных систем,
+       разрабатываемых в среде «1С:Предприятия 8», так и для описания и документирования существующих систем, разработанных ранее без использования СППР."
+    extension:
+      type: system
+      state: Опытная эксплуатация
+      state_update_date: 2023-01-01
+      development_platform: 1С:Предприятие 8
+      basic_solution: "1С:СППР"
+      basic_solution_state: Развивается поставщиком
+      basic_solution_link: https://v8.1c.ru/tekhnologii/sistema-proektirovaniya-prikladnykh-resheniy/
