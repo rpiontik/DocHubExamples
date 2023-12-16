@@ -1,0 +1,14 @@
+docs:
+
+  Romashka.doc.DefaultView:
+    type: markdown
+    location: "Архитектурная схема"
+    source: Templates/DefaultView.md
+
+  Romashka.doc.GroupingByStatus:
+    type: markdown
+    source: Templates/GroupingByStatus.md
+
+  Romashka.doc.GroupingByStatusCriticalLevel:
+    type: markdown
+    source: Templates/GroupingByStatusCriticalLevel.md

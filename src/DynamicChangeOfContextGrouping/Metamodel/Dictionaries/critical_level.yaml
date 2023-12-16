@@ -1,0 +1,18 @@
+dictionaries:
+
+  critical_level:
+    title: Уровень критичности приложений
+    description: Справочник уровней критичности приложения/системы/сервиса с точки зрения бизнеса
+    parameters:
+      - name: administrative
+        title: Administrative
+        description: Приложение/система/сервис является обеспечивающим
+      - name: business_operational
+        title: Business Operational
+        description: Приложение/система/сервис обеспечивает текущую операционную деятельность компании
+      - name: business_critical
+        title: Business Critical
+        description: Приложение/система/сервис является критически важным для текущей деятельности компании
+      - name: mission_critical
+        title: Mission Critical
+        description: Работоспособность приложения/сервиса влияет на само существование компании или на достижение её критических целей

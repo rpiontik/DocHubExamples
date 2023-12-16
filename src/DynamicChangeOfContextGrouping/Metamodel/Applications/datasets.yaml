@@ -1,0 +1,29 @@
+datasets:
+
+  Appication.dataset.ListOfInformationSystems:
+    source: >
+      (
+        
+        $Dictionaries := $.dictionaries;
+  
+        /* Запрос к данным архитектуры */
+        $Components := components.$sift(function($v) {  $v.extension.type="system" });
+        $Components.$spread().(
+        
+          $Component_Id := $keys()[0];
+          
+          $State := *.extension.state;
+          $CiticalLevel := *.critical_level;
+          
+          {
+            "ID": $Component_Id,
+            "Link": "/architect/components/" & $Component_Id,
+            "Title": *.title,
+            "Description": *.description,
+            "State": $Dictionaries.applications_status.parameters[name=$State].title,
+            "CiticalLevel": $Dictionaries.critical_level.parameters[name=$CiticalLevel].title
+          }
+        
+        )
+      
+      )

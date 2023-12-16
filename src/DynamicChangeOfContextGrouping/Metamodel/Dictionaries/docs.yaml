@@ -1,0 +1,27 @@
+docs:
+
+  dictionaries.doc.ApplicationStatus:
+    location: "Справочники/Статусы систем"
+    type: table
+    headers:
+      - value: name
+        text: Статус
+      - value: title
+        text: Заголовок для группировки
+    source: >
+      ( 
+        dictionaries.applications_status.parameters^(name)
+      )
+
+  dictionaries.doc.ApplicationCriticalLevel:
+    location: "Справочники/Уровень критичности приложений"
+    type: table
+    headers:
+      - value: name
+        text: Уровень критичности
+      - value: title
+        text: Заголовок для группировки
+    source: >
+      ( 
+        dictionaries.critical_level.parameters^(name)
+      )

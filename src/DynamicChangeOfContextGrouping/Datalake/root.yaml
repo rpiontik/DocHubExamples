@@ -1,0 +1,4 @@
+imports:
+  - Applications/root.yaml
+  - contexts.yaml
+  - docs.yaml
