@@ -1,0 +1,23 @@
+entities:
+
+  Constants:
+    title: Константы
+    description: Используемые константы в проекте, например, периодичность проведения актуализации архитектуры
+
+Constants:
+
+  # Базовые константы
+  Basic:
+    # Уровень, на котором описывается приложение/сервис в строке DDD объекта приложений, например,
+    # Romashka.ApplicationDataObject.SPPR.Spravochnik.rtVstrechiPoProektu -> Romashka.ApplicationDataObject.SPPR
+    ApplicationData_LevelOfApplication: 3
+
+  # Контанты управляющие отображаемой карточкой компонентов в случае дополнительного предсталения с расширенной информацией о
+  # комопненте без необходимости изменять стандратное представление
+  ComponentCard:
+    Default: "/architect/components/"                        # Значение по-умолчанию для Dochub
+    System:  "/entities/extended_application_card/blank?id=" # Приложение, сервис
+
+  # Контанты управляющие отображаемой карточкой объекта приложения/сервиса
+  AppDataObjCard:
+    Default:  "/entities/ApplicationDataObjects/blank?id="        # Значение по-умолчанию для Dochub

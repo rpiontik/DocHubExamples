@@ -1,0 +1,19 @@
+docs:
+
+  Common.doc.ApplicationsListOfInformationSystems:
+    location: "Общий список систем и сервисов"
+    type: table
+    headers:
+      - value: Title
+        text: "Наименование"
+        sortable: true
+        link: Link
+      - value: Description
+        text: "Описание"
+      - value: State
+        text: "Статус"
+        sortable: true
+      - value: CiticalLevel
+        text: "Уровень критичности"
+        sortable: true
+    source: Appication.dataset.ListOfInformationSystems

@@ -1,0 +1,104 @@
+functions:
+
+  get_transformed_components_description: >
+    (
+        $Grouping := $.Grouping;
+        $Datalake := $.Datalake;
+        
+        /* Предварительный отбор компонентов, которые дополнительно будут дополнительно ограничены движком из описания компонент контекста (атрибут контекста components) */
+        $Components := $Datalake.components.$sift(function($v) { $v.extension.type="system" });
+
+        /* Соответствие (кеш) текущего ID с его заменяемым значениями */
+        $ReplaceableIDs := $Components.$spread().(
+        
+           /* Текущий ID */
+           $Id := $keys()[0];
+        
+           /* Значение, получаемое из атрибута группировки и используемое для описания нового ID */
+           $ValueOfGroupingField := $eval($Grouping.FieldPath);
+        
+           /* Новый ключ, который формируется путем замены внутри DDD определенного уровня описания на $Grouping.Name + добавляется новый уровень */
+           /* с вариантами используемых значений группировок, например */
+           /* Romashka.Systems.DocumentManagement.DocumentFlow трансформиурется в Romashka.Systems.State.trial.DocumentFlow, где */
+           /*    State - создаваемый уровень группировки (статусы использования) */
+           /*    trial - текущий статус использования */
+           $NewId := $replace($Id, $split($Id, ".")[2], $Grouping.GroupingName & "." & $ValueOfGroupingField);
+        
+           {
+               "Id": $Id,
+               "NewId": $NewId
+           }
+        );
+        
+        /* Создание новой структуры компонентов, в которой изменяется ключ компонента с сохранением описания комопнента */
+        $Components := $Components.$spread().(
+        
+           $Id := $keys()[0];
+           $NewComponentId := $ReplaceableIDs[Id=$Id].NewId;
+        
+           /* Замена ID в связях компонентов */
+           $Links := *.links.(
+             $ComponentIdFromLink := id;
+             {
+                 "id": $ReplaceableIDs[Id=$ComponentIdFromLink].NewId,
+                 "direction": direction,
+                 "title": title
+             }
+           );
+        
+           /* Создание новой струкутры компонентов, при этом дополнительно в поле ID сохраняется первоначальный ID комонентов чтобы была возможность */
+           /* переходить по ссылка, используя движок Dochub (см. фунциию makePumlComponentDiagram внутри Metamodel/Dochub/plantuml.yaml) */
+           /* в блоке +++ДОБАВЛЕНИЕ+++ */    
+           {
+             $string($NewComponentId):
+             {
+                 "id": $Id,          /* Начальный ID комопнента */
+                 "title": *.title,   /* Заголовок компонента (сохраняется начальный) */
+                 "entity": *.entity, /* Вид сущности компонента (сохраняется начальный) */
+                 "technicalfield": $eval($Grouping.FieldPath), 
+                 "links": [$Links]   /* Связи компонента, в которых переопределеный ID компонентов  */
+             }
+           }
+        );
+    
+        /* Создание компонента верхнего уровня для группировки, например, по статусу: Romashka.Systems.Technological -> Romashka.Systems.State */  
+        $Group := 
+        {
+           $split($keys($Components[0]), ".", 3) ~> $join("."):
+           {
+               "title": $Grouping.GroupingTitle,
+               "entity": "component"
+           }
+        };
+        
+        /* Создание компонент текущего уровня с описанием, например, статусов на основании созданных компонент: Romashka.Systems.State.[ИмяСтатуса] */
+        $GroupValues := $distinct($Components.$spread().(
+        
+            $Id := $keys()[0];
+        
+           /* Значение, получаемое из атрибута группировки и используемое для описания нового ID */
+           $ValueOfGroupingField := *.technicalfield;
+          
+           /* Представление значение, получаемое из справочника */
+           $TitleGroupingField := $Grouping.Dictionary[name=$ValueOfGroupingField].title;
+          
+           /* ID создаваемого компонента */
+           $NewId := $append($split($Id, ".", 2), $Grouping.GroupingName & ".") ~> $join(".");
+          
+           /* Создание "виртеальных/технических" компонент в рамках конкретного контекста */
+           {
+             $NewId & $ValueOfGroupingField:
+             {
+                 "title":  $type($TitleGroupingField)="string" ? $TitleGroupingField : $ValueOfGroupingField,
+                 "entity": "component"
+             }
+           }
+        
+        ));
+    
+        /* Сборка общего контекста */
+        $Components := $append($Components, $Datalake.components.$sift(function($v) { $v.extension.type!="system" }));
+        $Components := $append($Components, $Group);
+        $Components := $append($Components, $GroupValues);
+    
+    )

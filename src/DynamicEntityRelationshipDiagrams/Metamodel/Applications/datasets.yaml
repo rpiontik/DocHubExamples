@@ -1,0 +1,29 @@
+datasets:
+
+  Appication.dataset.ListOfInformationSystems:
+    source: >
+      (
+        /* Получение из констант строку-описания расширенной карточки приложения/сервиса - "/entities/extended_application_card/blank?id=" */
+        /* Необходимо для упрощения поддержки изменений */
+        $Application_Card := Constants.ComponentCard.System;
+        
+        /* Запрос к данным архитектуры */
+        $Query := components.$spread().(
+        
+          $Component_Id := $keys()[0];
+          
+          *.{
+            "ID": $Component_Id,
+            "Link": $Application_Card & $Component_Id,
+            "Title": title,
+            "Description": description,
+            "Type": extension.type,
+            "Platform": extension.development_platform,
+            "State": extension.state,
+            "Basic_Solution": extension.basic_solution,
+            "Basic_Solution_Link": extension.basic_solution_link
+          }
+      
+        )[Type="system"]
+      
+      )

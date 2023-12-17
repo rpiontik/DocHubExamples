@@ -1,0 +1,133 @@
+components:
+
+  Romashka.Systems.DocumentManagement.DocumentFlow:
+    title: 1С:Документоборот
+    entity: component
+    description:
+      "Cистема управления документами и современная ECM-система (Enterprise Content Management — управление корпоративным контентом) с широким набором функциональных возможностей для
+       регулировки деловых процессов и совместной работы сотрудников. Программа позволяет автоматизировать типовые процессы работы с документами, организовать электронный
+       документооборот, обеспечить контроль исполнения задач, регламентировать управленческую деятельность"
+    critical_level: administrative
+    extension:
+      type: system
+      state: trial
+      state_update_date: 2023-01-01
+      development_platform: "1С:Предприятие 8"
+      basic_solution: "1С:Документооборот 8 КОРП, редакция 3.0"
+      basic_solution_state: Развивается поставщиком
+      basic_solution_link: https://solutions.1c.ru/catalog/doc8-corp
+    links:
+      - id: Romashka.Systems.DocumentManagement.Bitrix24
+        direction: -->
+        title: 10
+      - id: Romashka.Systems.FinancialManagement.CPM
+        direction: -->
+        title: 11
+
+  Romashka.Systems.DocumentManagement.Bitrix24:
+    title: Битрикс24
+    entity: component
+    description: Битрикс24
+    critical_level: administrative
+    extension:
+      type: system
+      state: archive
+      state_update_date: 2023-01-01
+      development_platform: Битрикс24
+      basic_solution: Битрикс24
+      basic_solution_state: Развивается поставщиком
+      basic_solution_link: https://www.bitrix24.ru/
+    links:
+      - id: Romashka.Systems.FinancialManagement.CPM
+        direction: -->
+        title: 20
+
+  Romashka.Systems.FinancialManagement.CPM:
+    title: 1С:Управление холдингом 8
+    entity: component
+    description: "Инструмент эффективной автоматизации работы управляющих компаний и финансовых служб бизнес-единиц холдингов"
+    critical_level: business_critical
+    extension:
+      type: system
+      state: archive
+      state_update_date: 2023-02-01
+      development_platform: "1С:Предприятие 8"
+      basic_solution: "1С:Управление холдингом 8"
+      basic_solution_state: Развивается поставщиком
+      basic_solution_link: https://v8.1c.ru/cpm/
+    links:
+      - id: Romashka.Systems.FinancialManagement.SAP
+        direction: -->
+        title: 30
+
+  Romashka.Systems.FinancialManagement.ERP:
+    title: 1С:ERP Управление предприятием
+    entity: component
+    description: "Инновационное и эффективное решение от компании «1С» для создания комплексной информационной системы управления любым предприятием. Этот продукт позволяет
+     автоматизировать основные бизнес-процессы, контролировать ключевые показатели деятельности предприятия, организовать взаимодействие служб и подразделений, 
+     координировать деятельность производственных подразделений, оценивать эффективность деятельности предприятия, отдельных подразделений и персонала"
+    critical_level: business_critical
+    extension:
+      type: system
+      state: trial
+      state_update_date: 2023-02-01
+      development_platform: "1С:Предприятие 8"
+      basic_solution: "1С:ERP, редакция 2.5"
+      basic_solution_state: Развивается поставщиком
+      basic_solution_link: https://solutions.1c.ru/catalog/1cerp
+    links:
+      - id: Romashka.Systems.FinancialManagement.SAP
+        direction: -->
+        title: 40
+      - id: Romashka.Systems.Technological.ESB_1CIntegrationCORP
+        direction: -->
+        title: 41
+      - id: Romashka.Systems.Technological.SPPR
+        direction: -->
+        title: 42
+
+  Romashka.Systems.FinancialManagement.SAP:
+    title: SAP
+    entity: component
+    description: SAP
+    critical_level: business_critical
+    extension:
+      type: system
+      state: production
+      state_update_date: 2023-02-01
+      development_platform: SAP
+      basic_solution: SAP
+      basic_solution_state: Развивается поставщиком
+      basic_solution_link: https://solutions.1c.ru/catalog/1cerp
+
+  Romashka.Systems.Technological.ESB_1CIntegrationCORP:
+    title: ESB-1C
+    entity: component
+    description:
+      "Корпоративная шина данных (ESB), которая применяется для обмена данными между различными системами в виде канонической модели данных"
+    critical_level: mission_critical
+    extension:
+      type: system
+      state: concept
+      state_update_date: 2023-01-01
+      development_platform: "1С:Предприятие 8"
+      basic_solution: 1С:Интеграция КОРП, редакция 1.0
+      basic_solution_state: Развивается поставщиком
+      basic_solution_link: https://solutions.1c.ru/catalog/integracorp
+
+  Romashka.Systems.Technological.SPPR:
+    title: 1С:СППР
+    entity: component
+    description:
+      "Система проектирования прикладных решений (СППР) предназначена для проектирования прикладных решений (конфигураций) на платформе «1С:Предприятие» и 
+       ведения технической документации проекта. СППР может быть использована как в качестве инструмента для проектирования новых информационных систем,
+       разрабатываемых в среде «1С:Предприятия 8», так и для описания и документирования существующих систем, разработанных ранее без использования СППР."
+    critical_level: mission_critical
+    extension:
+      type: system
+      state: trial
+      state_update_date: 2023-01-01
+      development_platform: 1С:Предприятие 8
+      basic_solution: "1С:СППР"
+      basic_solution_state: Развивается поставщиком
+      basic_solution_link: https://v8.1c.ru/tekhnologii/sistema-proektirovaniya-prikladnykh-resheniy/

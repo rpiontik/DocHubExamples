@@ -1,0 +1,37 @@
+entities:
+
+  extended_application_card:
+    title: Расширенная карточка компонент
+    description: Расширенная карточка комопнент
+    presentations:
+      blank:
+        title: Расширенная карточка приложения/сервиса
+        type: markdown
+        template: extended_card_application.md
+        source: >
+          (
+
+             $Id := $params.id;
+             /* Поиск приложения/сервиса выполянется по ключу, чтобы не использовать components.$spread() + [отбор по ID], */
+             /* так как на большом объеме озера данных будут наблюдаться задржки обработки данных */ 
+             $FoundSystem := $lookup(components, $Id);
+             
+             /* Количество объектов приложений, отображаемое в карточке в группе "Перейти" */
+             $CountAppDataObject := $count(ApplicationDataObjects.$spread().*.({"System_Id": system})[System_Id=$Id]);
+  
+              {
+                "ID": $Id,
+                "Link": Constants.ComponentCard.Default & $Id,
+                "Title": $FoundSystem.title,
+                "Description": $FoundSystem.description,
+                "Type": $FoundSystem.extension.type,
+                "Platform": $FoundSystem.extension.development_platform,
+                "State": $FoundSystem.extension.state,
+                "State_update_date": $FoundSystem.extension.state_update_date,
+                "Basic_Solution": $FoundSystem.extension.basic_solution,
+                "Basic_Solution_State": $FoundSystem.extension.basic_solution_state,
+                "Basic_Solution_Link": $FoundSystem.extension.basic_solution_link,
+                "CountAppDataObject": $CountAppDataObject
+              }
+     
+          )

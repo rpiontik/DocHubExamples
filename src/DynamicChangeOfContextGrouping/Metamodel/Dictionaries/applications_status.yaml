@@ -1,0 +1,20 @@
+dictionaries:
+
+  applications_status:
+    title: Статусы систем
+    description: Статус системы определяет её этап в жизненном цикле
+    parameters:
+      - name: concept
+        title: Инициатива
+      - name: implementation
+        title: Реализация
+      - name: production
+        title: В продуктиве
+      - name: trial
+        title: Опытная эксплуатация
+      - name: decommissioning
+        title: Вывод из эксплуатации
+      - name: archive
+        title: Архивная
+      - name: retirement
+        title: Выведена из эксплуатации

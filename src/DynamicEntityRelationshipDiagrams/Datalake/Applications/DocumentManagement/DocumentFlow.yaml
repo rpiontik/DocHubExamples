@@ -1,0 +1,17 @@
+components:
+
+  Romashka.Systems.DocumentManagement.DocumentFlow:
+    title: 1С:Документоборот
+    entity: component
+    description:
+      "Cистема управления документами и современная ECM-система (Enterprise Content Management — управление корпоративным контентом) с широким набором функциональных возможностей для
+       регулировки деловых процессов и совместной работы сотрудников. Программа позволяет автоматизировать типовые процессы работы с документами, организовать электронный
+       документооборот, обеспечить контроль исполнения задач, регламентировать управленческую деятельность"
+    extension:
+      type: system
+      state: Проектируется
+      state_update_date: 2023-01-01
+      development_platform: "1С:Предприятие 8"
+      basic_solution: "1С:Документооборот 8 КОРП, редакция 3.0"
+      basic_solution_state: Развивается поставщиком
+      basic_solution_link: https://solutions.1c.ru/catalog/doc8-corp

@@ -1,0 +1,5 @@
+imports:
+  - Dictionaries/root.yaml
+  - Applications/root.yaml
+  - Dochub/root.yaml
+  - functions.yaml

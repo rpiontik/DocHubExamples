@@ -1,0 +1,64 @@
+contexts:
+
+  DefaultView:
+    title: Схема по-умолчанию
+    extra-links: true
+    components:
+      - Romashka.Systems.*.*
+
+  GroupingByStatus:
+    title: Группировка по статусу приложения
+    extra-links: true
+    components:
+      - Romashka.Systems.*.*    # Для отображения в списке выбора контекста в карточке компонента
+      - Romashka.Systems.*.*.*
+    source: >
+      (
+
+          $Grouping := {
+            "GroupingName": "State",  /* Имя группировки, добавляемое в описание идентификатора компонента DDD */
+            "GroupingTitle": "Статус использования",  /* Представление группировки, отображаемое пользователями на схеме контекста */
+            "FieldPath": "*.extension.state", /* Путь к значениям для  расчета группировок */
+            "Dictionary": $.dictionaries.applications_status.parameters};  /* Описание вариантов значений и представлений группируемого атрибута */
+      
+          $Components := $eval($.functions.get_transformed_components_description, {"Grouping": $Grouping, "Datalake": $});
+      
+          /* http://docs.jsonata.org/other-operators */
+          /* ... ~> | ... | ... | (Transform) */
+          /* The object transform operator is used to modify a copy of an object structure using a pattern/action syntax to target specific
+          /* modifications while keeping the rest of the structure unchanged */ 
+  
+          /* Дополнительный пример использования - https://dochub.info/entities/docs/blank?dh-doc-id=dochub.contexts */
+          /* раздел 5. Источник данных для контекста */
+      
+          $ ~> | $ | { "components": $Components } |
+      )
+
+  GroupingByStatusCriticalLevel:
+    title: Группировка по уровню критичности
+    extra-links: true
+    components:
+      - Romashka.Systems.*.*    # Для отображения в списке выбора контекста в карточке компонента
+      - Romashka.Systems.*.*.*
+    source: >
+      (
+
+          $Grouping := {
+            "GroupingName": "CriticalLevel",  /* Имя группировки, добавляемое в описание идентификатора компонента DDD */
+            "GroupingTitle": "Уровень критичности",  /* Представление группировки, отображаемое пользователями на схеме контекста */
+            "FieldPath": "*.critical_level", /* Путь к значениям для  расчета группировок */
+            "Dictionary": $.dictionaries.critical_level.parameters};  /* Описание вариантов значений и представлений группируемого атрибута */
+      
+          $Components := $eval($.functions.get_transformed_components_description, {"Grouping": $Grouping, "Datalake": $});
+      
+          /* http://docs.jsonata.org/other-operators */
+          /* ... ~> | ... | ... | (Transform) */
+          /* The object transform operator is used to modify a copy of an object structure using a pattern/action syntax to target specific
+          /* modifications while keeping the rest of the structure unchanged */ 
+  
+          /* Дополнительный пример использования - https://dochub.info/entities/docs/blank?dh-doc-id=dochub.contexts */
+          /* раздел 5. Источник данных для контекста */
+
+          $ ~> | $ | { "components": $Components } |  
+      
+      )

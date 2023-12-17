@@ -1,0 +1,34 @@
+datasets:
+
+  ApplicationDataObjects.dataset.ListOfApplicationDataObjects:
+    source: >
+      (
+
+        $Datalake := $;
+      
+        /* Получение из констант строку-описания карточки объкта приложения/сервиса - "/entities/ApplicationDataObjects/blank?id="  */
+        /* Необходимо для упрощения поддержки изменений */
+        $AppDataObjCard := Constants.AppDataObjCard.Default;
+        
+        /* Получение из констант строку-описания расширенной карточки приложения/сервиса - "/entities/extended_application_card/blank?id=" */
+        /* Необходимо для упрощения поддержки изменений */
+        $Application_Card := Constants.ComponentCard.System;
+        
+        ApplicationDataObjects.$spread().(
+        
+          $AppDataObject_Id :=  $keys()[0];
+          
+          *.{
+            "Id": $AppDataObject_Id,
+            "Link": $AppDataObjCard & $AppDataObject_Id,
+            "Title": title,
+            "Description": description,
+            "System_Id": system,
+            "System_Link": $Application_Card & system,
+            "System_Title": $lookup($Datalake.components, system).title,
+            "Type": type
+          };
+        
+        )^(System_Id)
+
+      )

@@ -1,0 +1,31 @@
+components:
+
+  # Уровень организации
+  Romashka:
+    title: "Ромашка"
+    entity: component
+    extension:
+      type: organization
+      description: "Выращивание, культивирование, продажа ромашек"
+
+  # Уровень приложений/сервисов
+  Romashka.Systems:
+    title: Приложения и сервисы
+    entity: component
+    extension:
+      type: Applications
+
+  # Уровень приложений/сервисов в рамках конкретного функционального контура - Технологический контур
+  Romashka.Systems.Technological:
+    title: Технологический контур
+    entity: component
+
+  # Уровень приложений/сервисов в рамках конкретного функционального контура - Финансовый контур
+  Romashka.Systems.FinancialManagement:
+    title: Финансовый контур
+    entity: component
+
+  # Уровень приложений/сервисов в рамках конкретного функционального контура - Документооборот (ЭДО, ЮЗЭДО, ВКЭДО)
+  Romashka.Systems.DocumentManagement:
+    title: Документооборот
+    entity: component
