@@ -7,7 +7,14 @@ entities:
       blank:
         title: Основная карточка Объекты данных приложений
         type: markdown
-        template: templates/application_data_object_card.md
+        template: Templates/application_data_object_card.md
+        params:
+          type: object
+          properties:
+            id:
+              type: string
+          required:
+            - id
         source: >
           (
           

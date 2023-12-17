@@ -1,6 +1,6 @@
 imports:
 # 1. Пример создания метамодели для описания в нотации C4 Model
-#  - src/C4Model/dochub.yaml
+  - src/C4Model/dochub.yaml
 # 2. Валидации сущностей в DocHub с выводом информации в меню
 #  - src/validator_example/dochub.yaml
 # 3. Управление бизнес-сущностями
@@ -20,4 +20,10 @@ imports:
 # 10. Пример формирования L1 контекста
 #  - src/l1_drilldown/dochub.yaml
 # 11. Примеры для кликабельных линков и пользовательского DSL
-  - src/customdsl/dochub.yaml
+#  - src/customdsl/dochub.yaml
+# 13. Модификация метамодели для описания связей в собственном формате
+#  - src/new_links_format/dochub.yaml
+# 14. Entity Relationship диаграммы и диаграммы классов
+#  - src/DynamicEntityRelationshipDiagrams/dochub.yaml
+# 15. Динамическое изменение группировки компонент в представлении контекста
+#  - src/DynamicChangeOfContextGrouping/dochub.yaml
