@@ -47,5 +47,113 @@
 
 #### Отображение списка выбор и цветовая подсветка в стандартной карточке компонента
 ![ChoosingAaOptionInContext.png](Imgs%2FChoosingAaOptionInContext.png)
+
+# Пример добавления новой группировки
+
+- Добавить новую сущность вида "dictionaries", например, создав новый файл `\Metamodel\Dictionaries\development_model.yaml`:
+```
+dictionaries:
+
+  DevelopmentModel:
+    title: Модель разработки
+    description: Модель разработки определяет каким образом система создается/развивается - собственными силами либо силами подрядчика во внутреннем контуре разработки Компании, либо за пределами контура
+    parameters:
+      - name: inhouse                  # Ключ, указываемый при описании приложения/сервиса + используется при формировании ID приложения при группировке
+        title: Внутренняя разработка   # Отображение в отчетах, в группировках контекста
+      - name: external                 # Ключ, указываемый при описании приложения/сервиса + используется при формировании ID приложения при группировке
+        title: Внешняя разработка      # Отображение в отчетах, в группировках контекста
+      - name: none                     # Ключ, указываемый при описании приложения/сервиса + используется при формировании ID приложения при группировке
+        title: Разработка не ведется   # Отображение в отчетах, в группировках контекста   
+```
+- Если изменение выполнено через отдельный файл `development_model.yaml`, то необходимо добавить в файл `\Metamodel\Dictionaries\root.yaml` ссылку на добавленный файл, должно получится следующим образом:
+```
+imports:
+  ...
+  - development_model.yaml
+  ...
+```
+- Для каждого приложения/сервиса, указанного в файле `\Datalake\Applications\systems.yaml`, добавить новое поле `development_model`, значения поля необходимо заполнять значениями ранее добавленного справочника `DevelopmentModel` из свойсва `name`:
+```
+  Romashka.Systems.FinancialManagement.CPM:
+    title: 1С:Управление холдингом 8
+    ...
+    extension:
+      ...
+      development_model: none
+      ...
+
+  Romashka.Systems.FinancialManagement.ERP:
+    title: 1С:ERP Управление предприятием
+    ...
+    extension:
+      ...
+      development_model: inhouse
+      ...
+```
+- Добавить новый контекст, описывающий правила группировки приложений/систем, в файле `\Datalake\contexts.yaml`
+```
+  GroupingByDevelopmentModel:
+    title: Группировка по модели разработки
+    extra-links: true
+    components:
+      - Romashka.Systems.*.*     # Для отображения в списке выбора контекста в карточке компонента
+      - Romashka.Systems.*.*.*   # СДля отображения в списке выбора контекста в карточке компонента
+    source: >
+      (
+
+          $Grouping := {
+            "GroupingName": "DevelopmentModel",                         /* Имя группировки, добавляемое в описание идентификатора компонента DDD */
+            "GroupingTitle": "Модель разработки",                       /* Представление группировки, отображаемое пользователями на схеме контекста */
+            "FieldPath": "*.extension.development_model",               /* Путь к значениям для  расчета группировок */
+            "Dictionary": $.dictionaries.DevelopmentModel.parameters};  /* Описание вариантов значений и представлений группируемого атрибута */
+
+          $Components := $eval($.functions.get_transformed_components_description, {"Grouping": $Grouping, "Datalake": $});
+
+          $ ~> | $ | { "components": $Components } | 
+
+      )
+```
+В целом, на этом этапе достаточно добавить свойство контекста `location`, чтобы контекст отобразился в интерфейсе и был доступен в карточке компонента. Следующие пункты необходимы для реализации единого интерфейсного подхода текущего примера.
+- Скорректировать файл `\Datalake\docs.yaml`, добавив строки:
+```
+...
+  Romashka.doc.GroupingByDevelopmentModel:
+    type: markdown
+    source: templates/GroupingByDevelopmentModel.md
+...
+```
+- Добавить **новый** файл `\Datalake\Templates\GroupingByDevelopmentModel.md` следующего содержания (отдельное представление для отображения группировки по модели разработки):
+```
+   **Перейти** | [Группировка по-умолчанию](/docs/Romashka.doc.DefaultView)
+   | [Группировка по статусу](/docs/Romashka.doc.GroupingByStatus)
+   | [Группировка по уровню критичности](/docs/Romashka.doc.GroupingByStatusCriticalLevel) |
+
+![Архитектура](@context/GroupingByDevelopmentModel)
+```
+- Скорректировать в файл `\Datalake\Templates\DefaultView.md`, добавив "ссылку" на созданный ранее документ (`/docs/Romashka.doc.GroupingByDevelopmentModel`):
+```   
+**Перейти** | [Группировка по статусу](/docs/Romashka.doc.GroupingByStatus)
+   | [Группировка по уровню критичности](/docs/Romashka.doc.GroupingByStatusCriticalLevel)
+   | [Группировка по модели разработки](/docs/Romashka.doc.GroupingByDevelopmentModel) |
+
+![Архитектура](@context/DefaultView)
+```
+- Скорректировать в файл `\Datalake\Templates\GroupingByStatus.md`, добавив "ссылку" на созданный ранее документ (`/docs/Romashka.doc.GroupingByDevelopmentModel`):
+```   
+**Перейти** | [Группировка по-умолчанию](/docs/Romashka.doc.DefaultView) 
+| [Группировка по уровню критичности](/docs/Romashka.doc.GroupingByStatusCriticalLevel) 
+| [Группировка по модели разработки](/docs/Romashka.doc.GroupingByDevelopmentModel) |
+
+![Архитектура](@context/GroupingByStatus)
+```
+- Скорректировать в файл `\Datalake\Templates\GroupingByStatusCriticalLevel.md`, добавив "ссылку" на созданный ранее документ (`/docs/Romashka.doc.GroupingByDevelopmentModel`):
+```   
+**Перейти** | [Группировка по-умолчанию](/docs/Romashka.doc.DefaultView)
+| [Группировка по статусу](/docs/Romashka.doc.GroupingByStatus)
+| [Группировка по модели разработки](/docs/Romashka.doc.GroupingByDevelopmentModel) |
+
+![Архитектура](@context/GroupingByStatusCriticalLevel)
+```
+
 ## Авторские права
 - Автор примера: https://t.me/SultanovStanislav
