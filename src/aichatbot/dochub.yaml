@@ -1,0 +1,5 @@
+docs:
+  dochub.ai_chat_bot:
+    description: описание примера чата с корпративным ИИ 
+    type: markdown
+    source: README.md       

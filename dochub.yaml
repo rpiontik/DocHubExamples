@@ -44,3 +44,5 @@ imports:
 #  - src/DynamicEntityRelationshipDiagrams/dochub.yaml
 # 15. Динамическое изменение группировки компонент в представлении контекста
 #  - src/DynamicChangeOfContextGrouping/dochub.yaml
+# 16. Пример создания чата с корпоративным ИИ на основе репозитория DocHub
+  - src/aichatbot/dochub.yaml
