@@ -1,0 +1,7 @@
+flask
+gigachat
+langchain_community
+chromadb
+GitPython
+telebot
+yandex_chain
